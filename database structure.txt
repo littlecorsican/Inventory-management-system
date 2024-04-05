@@ -1,0 +1,14 @@
+items
+
+id - primary key
+name - 
+description
+folder - foreign key
+
+
+folders
+
+id - primary key
+name - 
+description
+folder - foreign key
