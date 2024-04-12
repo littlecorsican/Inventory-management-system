@@ -18,6 +18,11 @@ export default function Layout({  }) {
       url: "/items",
       icon: "/images/dashboard.png",
     },
+    {
+      title: "Create New",
+      url: "/create",
+      icon: "/images/dashboard.png",
+    },
   ]
 
   return (
@@ -34,11 +39,6 @@ export default function Layout({  }) {
             })
           }
           
-          <a href="/login" className="m-auto">
-            <div className="nav_item">
-              <div className=""><img src="" /></div>
-              <div className="">Login</div>
-          </div></a>
         </nav>
         <div className="w-full">
           <Outlet />

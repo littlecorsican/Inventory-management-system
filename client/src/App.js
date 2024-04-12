@@ -6,6 +6,7 @@ import Items from "./pages/items";
 import Item from "./pages/item";
 import Containers from "./pages/containers";
 import Container from "./pages/container";
+import CreateNew from "./pages/create";
 import { Oval } from "react-loader-spinner";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="container/:id" element={<Container />} />
               <Route path="items" element={<Items />} />
               <Route path="item/:id" element={<Item />} />
+              <Route path="create" element={<CreateNew />} />
               <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>
