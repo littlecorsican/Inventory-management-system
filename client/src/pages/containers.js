@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { base } from '../constant'
 
-function Items() {
+function Containers() {
 
   const [data, setData]=useState([
     {
@@ -22,26 +22,18 @@ function Items() {
   ])
 
 
-  // useEffect(()=>{
-  //   fetch(`${base}/api/item`)
-  //   .then((response)=>{
-  //     return response.json()
-  //   }).then((response)=>{
-  //     setData(response?.data)
-  //   })
-  // }, [])
 
   return (
     <div className="h-screen px-12 py-8">
-      <h2><u>Items</u></h2>
+      <h2><u>Containers</u></h2>
       {
         data.map((value)=>{
-          return <a href={`/item/${value?.id}`} key={value?.id}>
-            <div className="flex hover:border-2 rounded cursor-pointer px-6 py-2" >
-              <div className="min-h-[100px] min-w-[100px]">
+          return <a href={`/container/${value?.id}`} key={value?.id}>
+            <div key={value} className="flex hover:border-2 rounded cursor-pointer px-4 py-6" >
+              <div className="min-h-[100px] min-w-[100px] mx-2 my-2">
                 <img src={value?.image_path} />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col mx-2 my-2">
                 <div className="">
                   Name: {value?.name}
                 </div>
@@ -60,5 +52,4 @@ function Items() {
   );
 }
 
-export default Items;
-
+export default Containers;

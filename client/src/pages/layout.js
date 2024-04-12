@@ -10,12 +10,12 @@ export default function Layout({  }) {
   const navItem = [
     {
       title: "Containers",
-      url: "/",
+      url: "/containers",
       icon: "/images/home.png",
     },
     {
       title: "Items",
-      url: "/dashboard",
+      url: "/items",
       icon: "/images/dashboard.png",
     },
   ]
