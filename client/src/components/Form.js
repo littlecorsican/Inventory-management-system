@@ -20,6 +20,16 @@ function Form({
 
     useEffect(()=>{
         // call url to get containers
+        try {
+            fetch(`${base}/api/container`)
+            .then((response)=>response.json())
+            .then((response)=>{
+                console.log("response", response)
+                setContainers(response?.data)
+            })
+        } catch(err) {
+            console.log("err", err)
+        }
     },[])
 
     const clickSubmit=(e)=>{

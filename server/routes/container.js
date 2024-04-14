@@ -10,27 +10,11 @@ const Op = Sequelize.Op;
 
 
 router.get('/', function (req, res) { // Get all with pagination
-    const {limit, offset, sortBy, contains} = req.query
-    const sortBy_column = sortToColumnMap[sortBy.split(" ")[0]]
-    const sortBy_order = sortBy.split(" ")[1]
 
     try {
-        models.container.findAll({
-            limit: limit,
-            offset: offset,
-            where: {
-                name: {
-                    [Op.like]: `%${contains}%`
-                }
-            },
-            order: [
-                [sortBy_column, sortBy_order],
-            ],
-        }).then((response)=>res.send({  
+        models.container.findAll().then((response)=>res.send({  
             success: 1,
             data: response,
-            limit: limit,
-            offset: offset
         }))
     } catch(err) {
         res.send({  
