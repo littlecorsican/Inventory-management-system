@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Item.hasOne(models.Container, {foreignKey: 'container', as: 'container_fk'})
+      Item.hasOne(models.container, {foreignKey: 'container', as: 'container_fk'})
     }
   }
   Item.init({
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     container: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Item',
+    modelName: 'item',
     freezeTableName: true,
     timestamps: true,
   });

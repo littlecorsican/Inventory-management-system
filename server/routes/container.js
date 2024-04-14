@@ -15,7 +15,7 @@ router.get('/', function (req, res) { // Get all with pagination
     const sortBy_order = sortBy.split(" ")[1]
 
     try {
-        models.Container.findAll({
+        models.container.findAll({
             limit: limit,
             offset: offset,
             where: {
@@ -43,7 +43,7 @@ router.get('/', function (req, res) { // Get all with pagination
 router.get('/search', function (req, res) { // Get all with search
     const {limit, offset, search} = req.query
     try {
-        models.Container.findAll({
+        models.container.findAll({
             limit: limit,
             offset: offset,
             where: {
@@ -68,7 +68,7 @@ router.get('/search', function (req, res) { // Get all with search
 router.get('/:id', function (req, res) { // Get one by id
     const id = req.params.id
     try {
-        models.Container.findOne({ where: { id } })
+        models.container.findOne({ where: { id } })
         .then((response)=>res.send({  
             success: 1,
             data: response
@@ -84,7 +84,7 @@ router.get('/:id', function (req, res) { // Get one by id
 router.put('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
     try {
-        models.Container.update({ ...req.body }, {
+        models.container.update({ ...req.body }, {
             where: {
                 id
             }
@@ -105,7 +105,7 @@ router.put('/:id', async function (req, res) { // Update one by id
 router.delete('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
     try {
-        models.Container.destroy({
+        models.container.destroy({
             where: {
                 id
             }
@@ -126,7 +126,7 @@ router.delete('/:id', async function (req, res) { // Update one by id
 router.post('/', async function (req, res) { // Create new one
 
     try {
-        const result = await models.Container.create({ ...req.body })
+        const result = await models.container.create({ ...req.body })
         res.send({  
             success: 1,
             message: "Item created"

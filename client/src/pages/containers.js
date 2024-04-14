@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { base } from '../constant'
+import { base } from '../utils/constant'
+import Card from '../components/Card'
 
 function Containers() {
 
@@ -29,6 +30,9 @@ function Containers() {
       {
         data.map((value)=>{
           return <a href={`/container/${value?.id}`} key={value?.id}>
+            <Card
+              {...value}
+            />
             <div key={value} className="flex hover:border-2 rounded cursor-pointer px-4 py-6" >
               <div className="min-h-[100px] min-w-[100px] mx-2 my-2">
                 <img src={value?.image_path} />

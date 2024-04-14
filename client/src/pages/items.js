@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { base } from '../constant'
+import { base } from '../utils/constant'
+import Card from '../components/Card'
 
 function Items() {
 
@@ -22,14 +23,14 @@ function Items() {
   ])
 
 
-  // useEffect(()=>{
-  //   fetch(`${base}/api/item`)
-  //   .then((response)=>{
-  //     return response.json()
-  //   }).then((response)=>{
-  //     setData(response?.data)
-  //   })
-  // }, [])
+  useEffect(()=>{
+    fetch(`${base}/api/item?limit=10&offset=0&sortBy=''contains=''`)
+    .then((response)=>{
+      return response.json()
+    }).then((response)=>{
+      setData(response?.data)
+    })
+  }, [])
 
   return (
     <div className="h-screen px-12 py-8">
@@ -37,6 +38,9 @@ function Items() {
       {
         data.map((value)=>{
           return <a href={`/item/${value?.id}`} key={value?.id}>
+            <Card
+              {...value}
+            />
             <div className="flex hover:border-2 rounded cursor-pointer px-6 py-2" >
               <div className="min-h-[100px] min-w-[100px]">
                 <img src={value?.image_path} />

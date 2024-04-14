@@ -12,11 +12,13 @@ const Op = Sequelize.Op;
 
 router.get('/', function (req, res) { // Get all with pagination
     const {limit, offset, sortBy, contains} = req.query
-    const sortBy_column = sortToColumnMap[sortBy.split(" ")[0]]
-    const sortBy_order = sortBy.split(" ")[1]
+    const sortBy_column = "name"
+    const sortBy_order = "ASC"
+    //const sortBy_column = sortToColumnMap[sortBy.split(" ")[0]]
+    // const sortBy_order = sortBy.split(" ")[1]
 
     try {
-        models.Item.findAll({
+        models.item.findAll({
             limit: limit,
             offset: offset,
             where: {
@@ -44,7 +46,7 @@ router.get('/', function (req, res) { // Get all with pagination
 router.get('/search', function (req, res) { // Get all with search
     const {limit, offset, search} = req.query
     try {
-        models.Item.findAll({
+        models.item.findAll({
             limit: limit,
             offset: offset,
             where: {
@@ -69,7 +71,7 @@ router.get('/search', function (req, res) { // Get all with search
 router.get('/:id', function (req, res) { // Get one by id
     const id = req.params.id
     try {
-        models.Item.findOne({ where: { id } })
+        models.item.findOne({ where: { id } })
         .then((response)=>res.send({  
             success: 1,
             data: response
@@ -85,7 +87,7 @@ router.get('/:id', function (req, res) { // Get one by id
 router.put('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
     try {
-        models.Item.update({ ...req.body }, {
+        models.item.update({ ...req.body }, {
             where: {
                 id
             }
@@ -106,7 +108,7 @@ router.put('/:id', async function (req, res) { // Update one by id
 router.delete('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
     try {
-        models.Item.destroy({
+        models.item.destroy({
             where: {
                 id
             }
@@ -127,7 +129,8 @@ router.delete('/:id', async function (req, res) { // Update one by id
 router.post('/', async function (req, res) { // Create new one
 
     try {
-        const result = await models.Item.create({ ...req.body })
+        const result = await models.item.create({ ...req.body })
+        console.log("result", result)
         res.send({  
             success: 1,
             message: "Item created"
