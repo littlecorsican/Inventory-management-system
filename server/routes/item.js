@@ -19,11 +19,11 @@ router.get('/', function (req, res) { // Get all with pagination
 
     try {
         models.item.findAll({
-            limit: limit,
-            offset: offset,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
             where: {
                 name: {
-                    [Op.like]: `%${contains}%`
+                    [Op.like]: `%${contains||""}%`
                 }
             },
             order: [

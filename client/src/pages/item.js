@@ -17,9 +17,10 @@ function Item() {
   const [mode, setMode]=useState(_mode.view)
 
   useEffect(()=>{
-    fetch(`${base}api/item/${id}`)
-    .then((response)=>response.json)
+    fetch(`${base}/api/item/${id}`)
+    .then((response)=>response.json())
     .then((response)=>{
+      console.log("data", response, response?.data)
       setData(response?.data)
     })
   },[])

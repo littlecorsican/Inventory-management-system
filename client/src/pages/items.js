@@ -22,9 +22,12 @@ function Items() {
     },
   ])
 
-
+  const limit = 10
+  let offset = 0
+  let sortBy = "name ASC"
+  let contains = ''
   useEffect(()=>{
-    fetch(`${base}/api/item?limit=10&offset=0&sortBy=''contains=''`)
+    fetch(`${base}/api/item?limit=${limit}&offset=${offset}&sortBy=${sortBy}contains=${contains}`)
     .then((response)=>{
       return response.json()
     }).then((response)=>{
@@ -41,7 +44,7 @@ function Items() {
             <Card
               {...value}
             />
-            <div className="flex hover:border-2 rounded cursor-pointer px-6 py-2" >
+            {/* <div className="flex hover:border-2 rounded cursor-pointer px-6 py-2" >
               <div className="min-h-[100px] min-w-[100px]">
                 <img src={value?.image_path} />
               </div>
@@ -56,7 +59,7 @@ function Items() {
                   Contained in: {value?.container}
                 </div>
               </div>
-            </div>
+            </div> */}
           </a>
         })
       }

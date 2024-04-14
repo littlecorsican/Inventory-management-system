@@ -24,7 +24,7 @@ function CreateNew() {
                     description: formData.description,
                 }),
             })
-            .then((response)=>response.json)
+            .then((response)=>response.json())
             .then((response)=>{
                 console.log("response", response)
                 global_context.toast("Successfully created")
