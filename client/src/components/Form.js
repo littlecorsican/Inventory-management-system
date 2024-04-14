@@ -6,7 +6,8 @@ import { types } from '../utils/constant'
 
 function Form({
     handleSubmit,
-    type="Create"
+    action="Create",
+    type="item"
 }) {
 
     const typeRef = useRef()
@@ -23,7 +24,7 @@ function Form({
 
     const clickSubmit=(e)=>{
         const formData={
-            type: typeRef.current.value,
+            type: action === "Create" ? typeRef.current.value : type,
             name: nameRef.current.value,
             description: descriptionRef.current.value,
             imagePathRef: imagePathRef,
@@ -34,7 +35,7 @@ function Form({
 
   return (
     <form onSubmit={clickSubmit}>
-        {type == "Create" && <div className="my-2 py-2">
+        {action == "Create" && <div className="my-2 py-2">
             <label htmlFor="type-select" className="form-label input-label mt-3 fw-bold">
                 Type:
             </label>
@@ -80,7 +81,7 @@ function Form({
                 }
             </select>
         </div>
-        {type == "Create" ? <input type="submit" className="submit-btn" value="Create"/> : <input type="submit" className="submit-btn" value="Update" />}
+        {action == "Create" ? <input type="submit" className="submit-btn" value="Create"/> : <input type="submit" className="submit-btn" value="Update" />}
     </form>
 
   );

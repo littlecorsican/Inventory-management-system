@@ -34,7 +34,7 @@ function Item() {
           />
           <button className="submit-btn" onClick={()=>setMode(_mode.update)}>Update</button>
         </>}
-        {mode == _mode.update && <Update id={id} />}
+        {mode == _mode.update && <Update id={id} name={data?.name} type="item" />}
         {/* <button className="submit-btn" onClick={
           ()=> setMode((mode)=> mode==_mode.view ? _mode.update : _mode.view)
         }>

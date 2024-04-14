@@ -3,7 +3,7 @@ import { base } from '../utils/constant'
 import Form from '../components/Form'
 import { GlobalContext } from '../App'
 
-function Update({ id }) {
+function Update({ id, name, type }) {
     
     const global_context = useContext(GlobalContext)
 
@@ -12,7 +12,7 @@ function Update({ id }) {
         console.log(e)
         console.log("formData", formData)
         try {
-            fetch(`${base}api/item/${id}`, { 
+            fetch(`${base}/api/${type}/${id}`, { 
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -26,7 +26,15 @@ function Update({ id }) {
             .then((response)=>response.json())
             .then((response)=>{
                 console.log("response", response)
-                global_context.toast("Successfully updated")
+                if (response?.success) {
+                    global_context.toast("Successfully updated")
+                    setTimeout(()=>{
+                        document.location.href = `/item/${id}`
+                    }, 5000)
+                } else {
+                    global_context.toast("Error")
+                }
+                
             })
         } catch(err) {
             console.log("err", err)
@@ -36,8 +44,8 @@ function Update({ id }) {
 
   return (
     <div className="px-12 py-8">
-      <h2><u></u></h2>
-        <Form type="Update" handleSubmit={handleSubmit} />
+      <h2><u>{id}: {name.toUpperCase()}</u></h2>
+        <Form action="Update" handleSubmit={handleSubmit} type={type} />
     </div>
   );
 }
