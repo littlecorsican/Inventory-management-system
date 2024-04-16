@@ -9,12 +9,45 @@ require('dotenv').config();
 const Op = Sequelize.Op; 
 
 
-router.get('/', function (req, res) { // Get all with pagination
+router.get('/all', function (req, res) { // Get all with pagination
 
     try {
         models.container.findAll().then((response)=>res.send({  
             success: 1,
             data: response,
+        }))
+    } catch(err) {
+        res.send({  
+            success: 0,
+            message: err.toString()
+        });
+    }
+})
+
+router.get('/', function (req, res) { // Get all with pagination
+    const {limit, offset, sortBy, contains} = req.query
+    const sortBy_column = "name"
+    const sortBy_order = "ASC"
+    //const sortBy_column = sortToColumnMap[sortBy.split(" ")[0]]
+    // const sortBy_order = sortBy.split(" ")[1]
+
+    try {
+        models.container.findAll({
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            where: {
+                name: {
+                    [Op.like]: `%${contains||""}%`
+                }
+            },
+            order: [
+                [sortBy_column, sortBy_order],
+            ],
+        }).then((response)=>res.send({  
+            success: 1,
+            data: response,
+            limit: limit,
+            offset: offset
         }))
     } catch(err) {
         res.send({  

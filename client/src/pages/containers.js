@@ -22,7 +22,18 @@ function Containers() {
     },
   ])
 
-
+  const limit = 10
+  let offset = 0
+  let sortBy = "name ASC"
+  let contains = ''
+  useEffect(()=>{
+    fetch(`${base}/api/container?limit=${limit}&offset=${offset}&sortBy=${sortBy}contains=${contains}`)
+    .then((response)=>{
+      return response.json()
+    }).then((response)=>{
+      setData(response?.data)
+    })
+  }, [])
 
   return (
     <div className="h-screen px-12 py-8">

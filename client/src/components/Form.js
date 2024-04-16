@@ -25,7 +25,7 @@ function Form({
     useEffect(()=>{
         // call url to get containers
         try {
-            fetch(`${base}/api/container`)
+            fetch(`${base}/api/container/all`)
             .then((response)=>response.json())
             .then((response)=>{
                 console.log("response", response)
@@ -79,7 +79,7 @@ function Form({
                 title="Description: "
                 rows={4}
                 cols={48}
-                placeholder="Insert description of item her"
+                placeholder="Insert description of item here"
                 defaultValue={defaultValue.description}
             />
         </div>
