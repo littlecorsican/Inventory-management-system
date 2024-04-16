@@ -11,6 +11,7 @@ const InputText = forwardRef(function ( props, ref ) {
       -ref: ref
       -required:booleon
       -tooltipText: string
+      -defaultValue: string
   */
 
   const [showTooltipText, setShowTooltipText] = useState(false)

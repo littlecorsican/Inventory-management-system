@@ -7,7 +7,11 @@ import { types } from '../utils/constant'
 function Form({
     handleSubmit,
     action="Create",
-    type="item"
+    type="item",
+    defaultValue={
+        "name": "",
+        "description": ""
+    }
 }) {
 
     const typeRef = useRef()
@@ -65,6 +69,7 @@ function Form({
                 required
                 title="Name: "
                 id="name"
+                defaultValue={defaultValue.name}
             />
         </div>
         <div className="my-2 py-2">
@@ -75,6 +80,7 @@ function Form({
                 rows={4}
                 cols={48}
                 placeholder="Insert description of item her"
+                defaultValue={defaultValue.description}
             />
         </div>
         <div className="my-2 py-2">

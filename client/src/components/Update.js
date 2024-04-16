@@ -3,7 +3,7 @@ import { base } from '../utils/constant'
 import Form from '../components/Form'
 import { GlobalContext } from '../App'
 
-function Update({ id, name, type }) {
+function Update({ id, name, type, defaultValue }) {
     
     const global_context = useContext(GlobalContext)
 
@@ -45,7 +45,14 @@ function Update({ id, name, type }) {
   return (
     <div className="px-12 py-8">
       <h2><u>{id}: {name.toUpperCase()}</u></h2>
-        <Form action="Update" handleSubmit={handleSubmit} type={type} />
+        <Form 
+            action="Update"
+            handleSubmit={handleSubmit}
+            type={type}
+            defaultValue={
+                defaultValue
+            }
+        />
     </div>
   );
 }
