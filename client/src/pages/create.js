@@ -22,6 +22,7 @@ function CreateNew() {
                 body: JSON.stringify({
                     name: formData.name,
                     description: formData.description,
+                    imageUri: formData.imageUri
                 }),
             })
             .then((response)=>response.json())
