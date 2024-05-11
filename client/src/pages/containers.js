@@ -55,22 +55,6 @@ function Containers() {
             <Card
               {...value}
             />
-            {/* <div key={value} className="flex hover:border-2 rounded cursor-pointer px-4 py-6" >
-              <div className="min-h-[100px] min-w-[100px] mx-2 my-2">
-                <img src={value?.image_path} />
-              </div>
-              <div className="flex flex-col mx-2 my-2">
-                <div className="">
-                  Name: {value?.name}
-                </div>
-                <div className="">
-                  Description: {value?.description}
-                </div>
-                <div className="">
-                  Contained in: {value?.container}
-                </div>
-              </div>
-            </div> */}
           </a>
         })
       }

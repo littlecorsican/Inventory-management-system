@@ -11,17 +11,23 @@ function Update({ id, name, type, defaultValue }) {
         e.preventDefault()
         console.log(e)
         console.log("formData", formData)
+
+        const body = JSON.stringify({
+            name: formData.name,
+            description: formData.description,
+            container: formData.containerRef.current.value || null,
+        })
+
+        // if formData imageUri is not empty, then fill it in body, otherwise leave it blank
+        if ( formData.imageUri) body.imageUri = formData.imageUri
+
         try {
             fetch(`${base}/api/${type}/${id}`, { 
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                //body: JSON.stringify(formData),
-                body: JSON.stringify({
-                    name: formData.name,
-                    description: formData.description,
-                }),
+                body: body,
             })
             .then((response)=>response.json())
             .then((response)=>{

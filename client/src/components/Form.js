@@ -11,7 +11,9 @@ function Form({
     type="item",
     defaultValue={
         "name": "",
-        "description": ""
+        "description": "",
+        "container" : null,
+        "image_path": null
     }
 }) {
 
@@ -90,7 +92,7 @@ function Form({
                 <label htmlFor="container-select" className="form-label input-label mt-3 fw-bold">
                     Container:
                 </label>
-                <select id="container-select" className='ml-4' ref={containerRef}>
+                <select id="container-select" className='ml-4' ref={containerRef} defaultValue={defaultValue.container}>
                     {
                         containers && containers.map((value)=>{
                             return <option key={value?.id} value={value?.id}>
@@ -101,6 +103,9 @@ function Form({
                 </select>
             </div>
         </div>
+        {defaultValue.image_path && <div>
+            <img src={defaultValue.image_path} />
+        </div>}
         <div>
             <img src={imageUri} />
         </div>

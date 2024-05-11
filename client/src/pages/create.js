@@ -7,7 +7,7 @@ import { types } from '../utils/constant'
 function CreateNew() {
 
     const global_context = useContext(GlobalContext)
-    const handleSubmit=async(e, formData)=>{
+    const handleSubmit=(e, formData)=>{
         e.preventDefault()
         console.log(e)
         console.log("formData", formData)
@@ -16,14 +16,11 @@ function CreateNew() {
             fetch(`${base}/api/${formData?.type.toLowerCase()}`, { 
                 method: "POST",
                 headers: {
-                    Accept: "application/json",
                     "Content-Type": "application/json",
                 },
-                //body: JSON.stringify(formData),
                 body: JSON.stringify({
                     name: formData.name,
                     description: formData.description,
-                    container: formData.containerRef.current.value || null,
                     imageUri: formData.imageUri
                 }),
             })
