@@ -10,9 +10,19 @@ const router = express.Router()
 
 const itemRoute=require('./routes/item')
 const containerRoute=require('./routes/container')
+const fileRoute=require('./routes/file')
 
 app.use('/api/container', containerRoute)
 app.use('/api/item', itemRoute)
+//app.use('/api/file', fileRoute)
+const path = require('path')
+app.use('/media', express.static(path.join(__dirname, 'media')))
+
+// app.get('/media/:filename', (req, res) => {
+//    console.log("!!!!!!!!!!")
+//    const fileName = req.params.filename
+//    res.sendFile(__dirname + `/media/${fileName}`)
+// })
 
 app.get('/', function (req, res) {
    res.send('Hello World');

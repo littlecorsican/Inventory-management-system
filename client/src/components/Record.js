@@ -20,7 +20,6 @@ function Record(props) {
             onCameraError={()=>console.log("CAMERA ERROR")}
             isFullscreen={true}
         />
-        <img src={props.image} />
     </>
   );
 }

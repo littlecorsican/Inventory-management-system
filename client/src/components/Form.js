@@ -18,7 +18,6 @@ function Form({
     const typeRef = useRef()
     const nameRef = useRef()
     const descriptionRef = useRef()
-    const imagePathRef = useRef()
     const containerRef = useRef()
 
     const [containers, setContainers] = useState([])
@@ -27,16 +26,16 @@ function Form({
 
     useEffect(()=>{
         // call url to get containers
-        // try {
-        //     fetch(`${base}/api/container/all`)
-        //     .then((response)=>response.json())
-        //     .then((response)=>{
-        //         console.log("response", response)
-        //         setContainers(response?.data)
-        //     })
-        // } catch(err) {
-        //     console.log("err", err)
-        // }
+        try {
+            fetch(`${base}/api/container/all`)
+            .then((response)=>response.json())
+            .then((response)=>{
+                console.log("response", response)
+                setContainers(response?.data)
+            })
+        } catch(err) {
+            console.log("err", err)
+        }
     },[])
 
     const clickSubmit=(e)=>{
@@ -44,7 +43,6 @@ function Form({
             type: action === "Create" ? typeRef.current.value : type,
             name: nameRef.current.value,
             description: descriptionRef.current.value,
-            imagePathRef: imagePathRef,
             containerRef: containerRef,
             imageUri
         }
@@ -95,13 +93,16 @@ function Form({
                 <select id="container-select" className='ml-4' ref={containerRef}>
                     {
                         containers && containers.map((value)=>{
-                            return <option key={value?.id} value={value}>
+                            return <option key={value?.id} value={value?.id}>
                                 {value?.name}
                             </option>
                         })
                     }
                 </select>
             </div>
+        </div>
+        <div>
+            <img src={imageUri} />
         </div>
         {cameraOn && <div>
             <Record setCameraOn={setCameraOn} setImageUri={setImageUri} />

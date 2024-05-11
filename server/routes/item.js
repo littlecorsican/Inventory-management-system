@@ -2,13 +2,14 @@ const express=require('express')
 const router=express.Router()
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+router.use(bodyParser.json({ limit: '5mb' }));
 // router.use(bodyParser.raw());
 const models = require('../models/index')
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const Op = Sequelize.Op; 
-
+const ImageDataURI = require('image-data-uri');
+const helperFile = require('../helper/file.js');
 
 router.get('/', function (req, res) { // Get all with pagination
     const {limit, offset, sortBy, contains} = req.query
@@ -129,7 +130,18 @@ router.delete('/:id', async function (req, res) { // Update one by id
 router.post('/', async function (req, res) { // Create new one
 
     try {
-        const result = await models.item.create({ ...req.body })
+        const dataURI = req.body.imageUri
+        const dataToWrite = {...req.body}
+        if (dataURI) {
+            const fileName = helperFile.generateFileName();
+            console.log("fileName", fileName)
+            const output = await ImageDataURI.outputFile(dataURI, "./media/" + fileName)
+            console.log("output", output)
+            dataToWrite.image_path = fileName + ".png"
+        }
+        console.log("dataToWrite", dataToWrite)
+        
+        const result = await models.item.create(dataToWrite)
         console.log("result", result)
         res.send({  
             success: 1,
