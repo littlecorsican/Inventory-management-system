@@ -21,9 +21,9 @@ function Containers() {
       description: "description2"
     },
   ])
+  const [offset, setOffset]=useState(0)
 
   const limit = 10
-  let offset = 0
   let sortBy = "name ASC"
   let contains = ''
   useEffect(()=>{
@@ -34,6 +34,17 @@ function Containers() {
       setData(response?.data)
     })
   }, [])
+
+  const prev=()=>{
+    setOffset((offset)=>offset + 1)
+  }
+
+  const next=()=>{
+    if (offset > 0) {
+      setOffset((offset)=>offset - 1)
+    }
+  }
+
 
   return (
     <div className="h-screen px-12 py-8">
@@ -63,6 +74,10 @@ function Containers() {
           </a>
         })
       }
+      <div className="flex flex-row justify-around">
+        <button onClick={prev}> Prev </button>
+        <button onClick={next}> Next </button>
+      </div>
     </div>
   );
 }
