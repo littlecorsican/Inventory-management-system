@@ -54,27 +54,13 @@ function Items() {
             <Card
               {...value}
             />
-            {/* <div className="flex hover:border-2 rounded cursor-pointer px-6 py-2" >
-              <div className="min-h-[100px] min-w-[100px]">
-                <img src={value?.image_path} />
-              </div>
-              <div className="flex flex-col">
-                <div className="">
-                  Name: {value?.name}
-                </div>
-                <div className="">
-                  Description: {value?.description}
-                </div>
-                <div className="">
-                  Contained in: {value?.container}
-                </div>
-              </div>
-            </div> */}
           </a>
         })
       }
       <div className="flex flex-row justify-around">
         <button onClick={prev}> Prev </button>
+        <div> Page: {offset} </div>
+        <div> {offset*limit}-{offset*limit+limit} </div>
         <button onClick={next}> Next </button>
       </div>
     </div>

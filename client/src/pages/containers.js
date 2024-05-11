@@ -60,6 +60,8 @@ function Containers() {
       }
       <div className="flex flex-row justify-around">
         <button onClick={prev}> Prev </button>
+        <div> Page: {offset} </div>
+        <div> {offset*limit}-{offset*limit+limit} </div>
         <button onClick={next}> Next </button>
       </div>
     </div>
