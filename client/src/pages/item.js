@@ -27,6 +27,9 @@ function Item() {
   },[])
 
   const deleteItem=()=>{
+    const consent = window.confirm("Are you sure you want to delete this?")
+    alert(consent)
+    if (!consent) return
     try {
       fetch(`${base}/api/item/${id}`, { 
         method: "DELETE",
