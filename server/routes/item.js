@@ -8,7 +8,6 @@ const models = require('../models/index')
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const Op = Sequelize.Op; 
-const ImageDataURI = require('image-data-uri');
 const helperFile = require('../helper/file.js');
 
 router.get('/', function (req, res) { // Get all with pagination
@@ -87,8 +86,12 @@ router.get('/:id', function (req, res) { // Get one by id
 
 router.put('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
+    const dataURI = req.body.imageUri
+    const dataToWrite = {...req.body}
+    if (dataURI) dataToWrite.image_path = await helperFile.createFile(dataURI)
+
     try {
-        models.item.update({ ...req.body }, {
+        models.item.update(dataToWrite, {
             where: {
                 id
             }
@@ -132,13 +135,7 @@ router.post('/', async function (req, res) { // Create new one
     try {
         const dataURI = req.body.imageUri
         const dataToWrite = {...req.body}
-        if (dataURI) {
-            const fileName = helperFile.generateFileName();
-            console.log("fileName", fileName)
-            const output = await ImageDataURI.outputFile(dataURI, "./media/" + fileName)
-            console.log("output", output)
-            dataToWrite.image_path = fileName + ".png"
-        }
+        if (dataURI) dataToWrite.image_path = helperFile.createFile(dataURI)
         console.log("dataToWrite", dataToWrite)
         
         const result = await models.item.create(dataToWrite)

@@ -23,7 +23,7 @@ function Form({
     const containerRef = useRef()
 
     const [containers, setContainers] = useState([])
-    const [imageUri, setImageUri] = useState("")
+    const [imageUri, setImageUri] = useState(null)
     const [cameraOn, setCameraOn] = useState(false)
 
     useEffect(()=>{
@@ -104,9 +104,11 @@ function Form({
             </div>
         </div>
         {defaultValue.image_path && <div>
-            <img src={defaultValue.image_path} />
+            <h2>Current Image</h2>
+            <img src={`http://localhost:8081/media/${defaultValue.image_path}`} />
         </div>}
         <div>
+            <h2>Image from camera</h2>
             <img src={imageUri} />
         </div>
         {cameraOn && <div>
@@ -116,7 +118,10 @@ function Form({
             e.preventDefault()
             setCameraOn((cameraOn)=>!cameraOn)
         }}>Toggle Camera</button>
-        {action == "Create" ? <input type="submit" className="submit-btn" value="Create"/> : <input type="submit" className="submit-btn" value="Update" />}
+        {action == "Create" ? 
+            <input type="submit" className="submit-btn" value="Create"/> :
+            <input type="submit" className="submit-btn" value="Update" />
+        }
     </form>
 
   );

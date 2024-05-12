@@ -35,11 +35,11 @@ function Containers() {
     })
   }, [])
 
-  const prev=()=>{
+  const next=()=>{
     setOffset((offset)=>offset + 1)
   }
 
-  const next=()=>{
+  const prev=()=>{
     if (offset > 0) {
       setOffset((offset)=>offset - 1)
     }
@@ -58,10 +58,10 @@ function Containers() {
           </a>
         })
       }
-      <div className="flex flex-row justify-around">
+      <div className="flex flex-row justify-around py-2 px-4">
         <button onClick={prev}> Prev </button>
-        <div> Page: {offset} </div>
-        <div> {offset*limit}-{offset*limit+limit} </div>
+        <div> Page: {offset+1} </div>
+        <div> {offset*limit+1}-{offset*limit+limit} </div>
         <button onClick={next}> Next </button>
       </div>
     </div>

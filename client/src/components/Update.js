@@ -12,14 +12,16 @@ function Update({ id, name, type, defaultValue }) {
         console.log(e)
         console.log("formData", formData)
 
-        const body = JSON.stringify({
+        let body = {
             name: formData.name,
             description: formData.description,
             container: formData.containerRef.current.value || null,
-        })
+        }
 
         // if formData imageUri is not empty, then fill it in body, otherwise leave it blank
-        if ( formData.imageUri) body.imageUri = formData.imageUri
+        if ( formData.imageUri) body['imageUri'] = formData.imageUri
+
+        body = JSON.stringify(body)
 
         try {
             fetch(`${base}/api/${type}/${id}`, { 
@@ -34,9 +36,9 @@ function Update({ id, name, type, defaultValue }) {
                 console.log("response", response)
                 if (response?.success) {
                     global_context.toast("Successfully updated")
-                    setTimeout(()=>{
-                        document.location.href = `/item/${id}`
-                    }, 5000)
+                    // setTimeout(()=>{
+                    //     document.location.href = `/item/${id}`
+                    // }, 3000)
                 } else {
                     global_context.toast("Error")
                 }

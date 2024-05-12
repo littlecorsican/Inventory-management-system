@@ -24,7 +24,7 @@ function Card({
                     Contained in: {container}
                 </div>
                 <div>
-                    <img src={` http://localhost:8081/media/${image_path}`} />
+                    <img src={`http://localhost:8081/media/${image_path}`} />
                 </div>
             </div>
         </div>
