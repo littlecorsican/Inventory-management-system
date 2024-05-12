@@ -58,7 +58,7 @@ function Containers() {
           </a>
         })
       }
-      <div className="flex flex-row justify-around py-2 px-4">
+      <div className="flex flex-row justify-around py-2 px-4 static left-0 bottom-0 w-full">
         <button onClick={prev}> Prev </button>
         <div> Page: {offset+1} </div>
         <div> {offset*limit+1}-{offset*limit+limit} </div>

@@ -9,6 +9,8 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const Op = Sequelize.Op; 
 const helperFile = require('../helper/file.js');
+const fs = require('fs')
+const generalConfig = require('../config/general');
 
 router.get('/', function (req, res) { // Get all with pagination
     const {limit, offset, sortBy, contains} = req.query
@@ -110,8 +112,23 @@ router.put('/:id', async function (req, res) { // Update one by id
     }
 })
 
-router.delete('/:id', async function (req, res) { // Update one by id
+router.delete('/:id', async function (req, res) { // Delee one by id
     const id = req.params.id
+
+    try {
+        const item = await models.item.findOne({ where: { id } })
+        console.log("item", item)
+        if (item.image_path) {
+            const success = fs.rmSync(generalConfig.storagePath + item.image_path)
+            console.log("success", success)
+        }
+    } catch(err) {
+        res.send({  
+            success: 0,
+            message: err.toString()
+        });
+    }
+
     try {
         models.item.destroy({
             where: {
@@ -136,7 +153,7 @@ router.post('/', async function (req, res) { // Create new one
     try {
         const dataURI = req.body.imageUri
         const dataToWrite = {...req.body}
-        if (dataURI) dataToWrite.image_path = helperFile.createFile(dataURI)
+        if (dataURI) dataToWrite.image_path = await helperFile.createFile(dataURI)
         console.log("dataToWrite", dataToWrite)
         
         const result = await models.item.create(dataToWrite)
