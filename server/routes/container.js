@@ -34,7 +34,7 @@ router.get('/', function (req, res) { // Get all with pagination
     try {
         models.container.findAll({
             limit: parseInt(limit),
-            offset: parseInt(offset),
+            offset: parseInt(offset*limit),
             where: {
                 name: {
                     [Op.like]: `%${contains||""}%`
@@ -100,8 +100,12 @@ router.get('/:id', function (req, res) { // Get one by id
 
 router.put('/:id', async function (req, res) { // Update one by id
     const id = req.params.id
+    const dataURI = req.body.imageUri
+    const dataToWrite = {...req.body}
+    if (dataURI) dataToWrite.image_path = await helperFile.createFile(dataURI)
+
     try {
-        models.container.update({ ...req.body }, {
+        models.container.update(dataToWrite, {
             where: {
                 id
             }
@@ -119,8 +123,23 @@ router.put('/:id', async function (req, res) { // Update one by id
     }
 })
 
-router.delete('/:id', async function (req, res) { // Update one by id
+router.delete('/:id', async function (req, res) { // Delee one by id
     const id = req.params.id
+
+    try {
+        const container = await models.container.findOne({ where: { id } })
+        console.log("container", container)
+        if (container.image_path) {
+            const success = fs.rmSync(generalConfig.storagePath + container.image_path)
+            console.log("success", success)
+        }
+    } catch(err) {
+        res.send({  
+            success: 0,
+            message: err.toString()
+        });
+    }
+
     try {
         models.container.destroy({
             where: {
@@ -140,13 +159,20 @@ router.delete('/:id', async function (req, res) { // Update one by id
     }
 })
 
+
 router.post('/', async function (req, res) { // Create new one
 
     try {
-        const result = await models.container.create({ ...req.body })
+        const dataURI = req.body.imageUri
+        const dataToWrite = {...req.body}
+        if (dataURI) dataToWrite.image_path = await helperFile.createFile(dataURI)
+        console.log("dataToWrite", dataToWrite)
+        
+        const result = await models.container.create(dataToWrite)
+        console.log("result", result)
         res.send({  
             success: 1,
-            message: "Item created"
+            message: "Container created"
         });
     }
     catch(err) {
@@ -156,5 +182,6 @@ router.post('/', async function (req, res) { // Create new one
         });
     }
 })
+
 
 module.exports = router

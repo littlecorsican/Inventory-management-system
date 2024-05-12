@@ -18,8 +18,7 @@ router.get('/', function (req, res) { // Get all with pagination
     const sortBy_order = "ASC"
     //const sortBy_column = sortToColumnMap[sortBy.split(" ")[0]]
     // const sortBy_order = sortBy.split(" ")[1]
-    console.log("limit", limit)
-    console.log("offset", offset)
+    
     try {
         models.item.findAll({
             limit: parseInt(limit),
