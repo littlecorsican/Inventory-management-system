@@ -1,2 +1,2 @@
-export const base = "http://127.0.0.1:8081"
+export const base = "http://192.168.0.105:8081"
 export const types = ["Item", "Container"]
