@@ -14,6 +14,7 @@ import {
 import Rooms from './components/Rooms';
 import Containers from './components/Containers';
 import Items from './components/Items';
+import Lobby from './components/Lobby';
 
 const theme = createTheme({
     palette: {
@@ -51,7 +52,8 @@ function App() {
 
                     <Container maxWidth="lg" sx={{ mt: 4 }}>
                         <Routes>
-                            <Route path="/" element={<Rooms />} />
+                            <Route path="/" element={<Lobby />} />
+                            <Route path="/rooms" element={<Rooms />} />
                             <Route path="/containers" element={<Containers />} />
                             <Route path="/items" element={<Items />} />
                         </Routes>

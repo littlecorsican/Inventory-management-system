@@ -1,18 +1,20 @@
-// API endpoints for the inventory management system
+import { http } from '../utils/request'
+
+const baseHost = process.env.REACT_APP_BACKEND_URL;
 
 // Rooms
 export const getAllRooms = async () => {
-    // TODO: Implement API call
+    http.get(`${baseHost}/rooms/`)
     return [];
 };
 
 export const getRoomById = async (id) => {
-    // TODO: Implement API call
+    http.get(`${baseHost}/rooms/${id}`)
     return null;
 };
 
 export const createRoom = async (roomData) => {
-    // TODO: Implement API call
+    http.post(`${baseHost}/rooms/`)
     return null;
 };
 
