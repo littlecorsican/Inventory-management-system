@@ -19,6 +19,17 @@ const Lobby = () => {
     return (
         <Box sx={{ p: 3 }}>
           <h1>Dashboard</h1>
+          {/* TODO 
+           number of items
+           number of boxes
+           number of rooms
+           search item
+           search container
+           search rooms
+           items added in the last x days
+           last registered item
+          
+          */}
         </Box>
     );
 };

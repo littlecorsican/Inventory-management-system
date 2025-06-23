@@ -63,9 +63,9 @@ const Rooms = () => {
         e.preventDefault();
         const roomData = {
             ...formData,
-            width: parseInt(formData.width),
-            length: parseInt(formData.length),
-            height: parseInt(formData.height),
+            width: parseInt(formData.width) || null,
+            length: parseInt(formData.length) || null,
+            height: parseInt(formData.height) || null,
         };
 
         if (editingRoom) {
@@ -134,21 +134,18 @@ const Rooms = () => {
                     type="number"
                     value={formData.width}
                     onChange={(e) => setFormData({ ...formData, width: e.target.value })}
-                    required
                 />
                 <TextField
                     label="Length (m)"
                     type="number"
                     value={formData.length}
                     onChange={(e) => setFormData({ ...formData, length: e.target.value })}
-                    required
                 />
                 <TextField
                     label="Height (m)"
                     type="number"
                     value={formData.height}
                     onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                    required
                 />
             </Modal>
         </Box>

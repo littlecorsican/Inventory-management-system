@@ -39,6 +39,9 @@ function App() {
                                 Inventory Management System
                             </Typography>
                             <Button color="inherit" component={Link} to="/">
+                                Dashboard
+                            </Button>
+                            <Button color="inherit" component={Link} to="/rooms">
                                 Rooms
                             </Button>
                             <Button color="inherit" component={Link} to="/containers">

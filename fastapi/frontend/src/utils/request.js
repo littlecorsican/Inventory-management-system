@@ -1,5 +1,5 @@
 // Base URL for API requests
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 
 
 
@@ -17,15 +17,17 @@ const request = async (endpoint, options = {}) => {
   try {
     const url = `${BASE_URL}${endpoint}`;
 
-    const headers = {
+    const config = {
+      method: options.method,
+      headers: {
         'Content-Type': 'application/json',
-    }
-    const options = {
-        headers
-    }
+        ...options.headers,
+      },
+      body: JSON.stringify(options.body),
+    };
 
-    // Make the request
-    const response = await fetch(url, options);
+
+    const response = await fetch(url, config);
 
     // Apply response interceptor
     return await responseInterceptor(response);

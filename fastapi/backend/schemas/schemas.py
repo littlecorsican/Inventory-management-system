@@ -4,9 +4,9 @@ from typing import Optional, List
 # Room Schemas
 class RoomBase(BaseModel):
     name: str
-    width: int
-    length: int
-    height: int
+    width: Optional[int]
+    length: Optional[int]
+    height: Optional[int]
 
 class RoomCreate(RoomBase):
     pass
