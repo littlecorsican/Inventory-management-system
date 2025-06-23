@@ -1,7 +1,23 @@
 // Base URL for API requests
 const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 
+// Default headers
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+};
 
+// Request interceptor
+const requestInterceptor = (config) => {
+  // Get token from localStorage if it exists
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return config;
+};
 
 // Response interceptor
 const responseInterceptor = async (response) => {
@@ -16,18 +32,19 @@ const responseInterceptor = async (response) => {
 const request = async (endpoint, options = {}) => {
   try {
     const url = `${BASE_URL}${endpoint}`;
-
     const config = {
-      method: options.method,
+      ...options,
       headers: {
-        'Content-Type': 'application/json',
+        ...defaultHeaders,
         ...options.headers,
       },
-      body: JSON.stringify(options.body),
     };
 
+    // Apply request interceptor
+    const interceptedConfig = requestInterceptor(config);
 
-    const response = await fetch(url, config);
+    // Make the request
+    const response = await fetch(url, interceptedConfig);
 
     // Apply response interceptor
     return await responseInterceptor(response);
@@ -43,19 +60,20 @@ export const http = {
   post: (endpoint, data, options = {}) => request(endpoint, {
     ...options,
     method: 'POST',
-    body: JSON.stringify(data),
+    body: data,
   }),
   put: (endpoint, data, options = {}) => request(endpoint, {
     ...options,
     method: 'PUT',
-    body: JSON.stringify(data),
+    body: data,
   }),
   patch: (endpoint, data, options = {}) => request(endpoint, {
     ...options,
     method: 'PATCH',
-    body: JSON.stringify(data),
+    body: data,
   }),
   delete: (endpoint, options = {}) => request(endpoint, { ...options, method: 'DELETE' }),
 };
 
 export default http;
+
