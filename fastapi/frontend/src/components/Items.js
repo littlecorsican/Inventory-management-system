@@ -39,12 +39,12 @@ const Items = () => {
 
     const fetchItems = async () => {
         const data = await getAllItems();
-        setItems(data);
+        setItems(data.items);
     };
 
     const fetchContainers = async () => {
         const data = await getAllContainers();
-        setContainers(data);
+        setContainers(data.items);
     };
 
     const handleOpenModal = (item = null) => {

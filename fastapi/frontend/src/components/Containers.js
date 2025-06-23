@@ -37,12 +37,12 @@ const Containers = () => {
 
     const fetchContainers = async () => {
         const data = await getAllContainers();
-        setContainers(data);
+        setContainers(data.items);
     };
 
     const fetchRooms = async () => {
         const data = await getAllRooms();
-        setRooms(data);
+        setRooms(data.items);
     };
 
     const handleOpenModal = (container = null) => {

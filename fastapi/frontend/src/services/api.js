@@ -16,7 +16,7 @@ export const getRoomById = async (id) => {
 export const createRoom = async (roomData) => {
     console.log("roomData", roomData)
     const data = await http.post(`/rooms`, roomData)
-    return data;
+    return data ;
 };
 
 export const updateRoom = async (id, roomData) => {

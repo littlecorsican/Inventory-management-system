@@ -30,7 +30,7 @@ const Rooms = () => {
 
     const fetchRooms = async () => {
         const data = await getAllRooms();
-        setRooms(data);
+        setRooms(data.items);
     };
 
     const handleOpenModal = (room = null) => {
