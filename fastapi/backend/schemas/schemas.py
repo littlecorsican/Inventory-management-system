@@ -21,7 +21,7 @@ class Room(RoomBase):
 class ContainerBase(BaseModel):
     name: str
     description: str
-    image_path: str
+    image_path: Optional[str]
     contained_in: Optional[int] = None
     room_id: Optional[int] = None
 
@@ -38,11 +38,11 @@ class Container(ContainerBase):
 class ItemBase(BaseModel):
     name: str
     description: str
-    image_path: str
-    xCoor: int
-    yCoor: int
-    zCoor: int
-    contained_in: int
+    image_path: Optional[str]
+    xCoor: Optional[int]
+    yCoor: Optional[int]
+    zCoor: Optional[int]
+    contained_in: Optional[int]
 
 class ItemCreate(ItemBase):
     pass

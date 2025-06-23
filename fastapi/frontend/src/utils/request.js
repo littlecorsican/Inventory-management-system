@@ -40,6 +40,11 @@ const request = async (endpoint, options = {}) => {
       },
     };
 
+    // Stringify body if it exists and is not already a string
+    if (config.body && typeof config.body === 'object') {
+      config.body = JSON.stringify(config.body);
+    }
+
     // Apply request interceptor
     const interceptedConfig = requestInterceptor(config);
 

@@ -13,7 +13,7 @@ import {
     InputLabel,
     TextField
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import Modal from './Modal';
 import { getAllItems, createItem, updateItem, deleteItem, getAllContainers } from '../services/api';
 
@@ -22,6 +22,9 @@ const Items = () => {
     const [containers, setContainers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedContainer, setSelectedContainer] = useState('all');
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -47,6 +50,20 @@ const Items = () => {
         setContainers(data.items);
     };
 
+    // Filter items based on search term and selected container
+    const filteredItems = items.filter(item => {
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = (
+            item.name.toLowerCase().includes(searchLower) ||
+            (item.description && item.description.toLowerCase().includes(searchLower))
+        );
+        
+        const matchesContainer = selectedContainer === 'all' || 
+            item.contained_in === parseInt(selectedContainer);
+        
+        return matchesSearch && matchesContainer;
+    });
+
     const handleOpenModal = (item = null) => {
         if (item) {
             setEditingItem(item);
@@ -59,6 +76,7 @@ const Items = () => {
                 zCoor: item.zCoor,
                 contained_in: item.contained_in,
             });
+            setSelectedFile(null);
         } else {
             setEditingItem(null);
             setFormData({
@@ -70,6 +88,7 @@ const Items = () => {
                 zCoor: '',
                 contained_in: '',
             });
+            setSelectedFile(null);
         }
         setOpenModal(true);
     };
@@ -77,12 +96,32 @@ const Items = () => {
     const handleCloseModal = () => {
         setOpenModal(false);
         setEditingItem(null);
+        setSelectedFile(null);
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+        if (file) {
+            setFormData({ ...formData, image_path: file.name });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Handle file upload if a new file is selected
+        let imagePath = formData.image_path;
+        if (selectedFile) {
+            // Here you would typically upload the file to your server
+            // For now, we'll use the file name as the path
+            // You might want to implement actual file upload logic here
+            imagePath = `/uploads/${selectedFile.name}`;
+        }
+
         const itemData = {
             ...formData,
+            image_path: imagePath,
             xCoor: parseInt(formData.xCoor),
             yCoor: parseInt(formData.yCoor),
             zCoor: parseInt(formData.zCoor),
@@ -115,8 +154,40 @@ const Items = () => {
                 </Button>
             </Box>
 
+            {/* Search Bar */}
+            <Box sx={{ mb: 3 }}>
+                <TextField
+                    fullWidth
+                    label="Search items by name or description"
+                    variant="outlined"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Type to search..."
+                    sx={{ maxWidth: 600 }}
+                />
+            </Box>
+
+            {/* Container Filter */}
+            <Box sx={{ mb: 3 }}>
+                <FormControl sx={{ minWidth: 300 }}>
+                    <InputLabel>Filter by Container</InputLabel>
+                    <Select
+                        value={selectedContainer}
+                        label="Filter by Container"
+                        onChange={(e) => setSelectedContainer(e.target.value)}
+                    >
+                        <MenuItem value="all">Show all</MenuItem>
+                        {containers.map((container) => (
+                            <MenuItem key={container.id} value={container.id}>
+                                {container.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
+
             <Grid container spacing={3}>
-                {items.map((item) => (
+                {filteredItems.map((item) => (
                     <Grid item xs={12} sm={6} md={4} key={item.id}>
                         <Card>
                             <CardContent>
@@ -144,6 +215,15 @@ const Items = () => {
                 ))}
             </Grid>
 
+            {/* Show message when no items match search */}
+            {filteredItems.length === 0 && (searchTerm || selectedContainer !== 'all') && (
+                <Box sx={{ textAlign: 'center', mt: 4 }}>
+                    <Typography variant="h6" color="textSecondary">
+                        No items found matching your criteria
+                    </Typography>
+                </Box>
+            )}
+
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
@@ -163,31 +243,47 @@ const Items = () => {
                     multiline
                     rows={3}
                 />
-                <TextField
-                    label="Image Path"
-                    value={formData.image_path}
-                    onChange={(e) => setFormData({ ...formData, image_path: e.target.value })}
-                />
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="image-upload"
+                        type="file"
+                        onChange={handleFileChange}
+                    />
+                    <label htmlFor="image-upload">
+                        <Button
+                            variant="outlined"
+                            component="span"
+                            startIcon={<CloudUploadIcon />}
+                            fullWidth
+                        >
+                            {selectedFile ? selectedFile.name : 'Upload Image'}
+                        </Button>
+                    </label>
+                    {selectedFile && (
+                        <Typography variant="caption" color="textSecondary">
+                            Selected: {selectedFile.name}
+                        </Typography>
+                    )}
+                </Box>
                 <TextField
                     label="X Coordinate"
                     type="number"
                     value={formData.xCoor}
                     onChange={(e) => setFormData({ ...formData, xCoor: e.target.value })}
-                    required
                 />
                 <TextField
                     label="Y Coordinate"
                     type="number"
                     value={formData.yCoor}
                     onChange={(e) => setFormData({ ...formData, yCoor: e.target.value })}
-                    required
                 />
                 <TextField
                     label="Z Coordinate"
                     type="number"
                     value={formData.zCoor}
                     onChange={(e) => setFormData({ ...formData, zCoor: e.target.value })}
-                    required
                 />
                 <FormControl fullWidth>
                     <InputLabel>Container</InputLabel>
@@ -195,7 +291,6 @@ const Items = () => {
                         value={formData.contained_in}
                         label="Container"
                         onChange={(e) => setFormData({ ...formData, contained_in: e.target.value })}
-                        required
                     >
                         {containers.map((container) => (
                             <MenuItem key={container.id} value={container.id}>
