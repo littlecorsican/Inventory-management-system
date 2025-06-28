@@ -6,23 +6,16 @@ import {
     CardContent,
     Typography,
     IconButton,
-    Grid,
-    TextField
+    Grid
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import Modal from './Modal';
 import { getAllRooms, createRoom, updateRoom, deleteRoom } from '../services/api';
+import RoomModal from '../modals/RoomModal';
 
 const Rooms = () => {
     const [rooms, setRooms] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [editingRoom, setEditingRoom] = useState(null);
-    const [formData, setFormData] = useState({
-        name: '',
-        width: '',
-        length: '',
-        height: '',
-    });
 
     useEffect(() => {
         fetchRooms();
@@ -34,23 +27,7 @@ const Rooms = () => {
     };
 
     const handleOpenModal = (room = null) => {
-        if (room) {
-            setEditingRoom(room);
-            setFormData({
-                name: room.name,
-                width: room.width,
-                length: room.length,
-                height: room.height,
-            });
-        } else {
-            setEditingRoom(null);
-            setFormData({
-                name: '',
-                width: '',
-                length: '',
-                height: '',
-            });
-        }
+        setEditingRoom(room);
         setOpenModal(true);
     };
 
@@ -59,22 +36,12 @@ const Rooms = () => {
         setEditingRoom(null);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const roomData = {
-            ...formData,
-            width: parseInt(formData.width) || null,
-            length: parseInt(formData.length) || null,
-            height: parseInt(formData.height) || null,
-        };
-
-        if (editingRoom) {
-            await updateRoom(editingRoom.id, roomData);
+    const handleSubmit = async (roomData, roomId) => {
+        if (roomId) {
+            await updateRoom(roomId, roomData);
         } else {
             await createRoom(roomData);
         }
-
-        handleCloseModal();
         fetchRooms();
     };
 
@@ -117,37 +84,12 @@ const Rooms = () => {
                 ))}
             </Grid>
 
-            <Modal
+            <RoomModal
                 open={openModal}
                 onClose={handleCloseModal}
-                title={editingRoom ? 'Edit Room' : 'Add Room'}
+                editingRoom={editingRoom}
                 onSubmit={handleSubmit}
-            >
-                <TextField
-                    label="Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                />
-                <TextField
-                    label="Width (m)"
-                    type="number"
-                    value={formData.width}
-                    onChange={(e) => setFormData({ ...formData, width: e.target.value })}
-                />
-                <TextField
-                    label="Length (m)"
-                    type="number"
-                    value={formData.length}
-                    onChange={(e) => setFormData({ ...formData, length: e.target.value })}
-                />
-                <TextField
-                    label="Height (m)"
-                    type="number"
-                    value={formData.height}
-                    onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                />
-            </Modal>
+            />
         </Box>
     );
 };

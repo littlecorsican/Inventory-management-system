@@ -13,27 +13,17 @@ import {
     InputLabel,
     TextField
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, CloudUpload as CloudUploadIcon } from '@mui/icons-material';
-import Modal from './Modal';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { getAllItems, createItem, updateItem, deleteItem, getAllContainers } from '../services/api';
+import ItemModal from '../modals/ItemModal';
 
 const Items = () => {
     const [items, setItems] = useState([]);
     const [containers, setContainers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContainer, setSelectedContainer] = useState('all');
-    const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        image_path: '',
-        xCoor: '',
-        yCoor: '',
-        zCoor: '',
-        contained_in: '',
-    });
 
     useEffect(() => {
         fetchItems();
@@ -65,76 +55,21 @@ const Items = () => {
     });
 
     const handleOpenModal = (item = null) => {
-        if (item) {
-            setEditingItem(item);
-            setFormData({
-                name: item.name,
-                description: item.description,
-                image_path: item.image_path,
-                xCoor: item.xCoor,
-                yCoor: item.yCoor,
-                zCoor: item.zCoor,
-                contained_in: item.contained_in,
-            });
-            setSelectedFile(null);
-        } else {
-            setEditingItem(null);
-            setFormData({
-                name: '',
-                description: '',
-                image_path: '',
-                xCoor: '',
-                yCoor: '',
-                zCoor: '',
-                contained_in: '',
-            });
-            setSelectedFile(null);
-        }
+        setEditingItem(item);
         setOpenModal(true);
     };
 
     const handleCloseModal = () => {
         setOpenModal(false);
         setEditingItem(null);
-        setSelectedFile(null);
     };
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        setSelectedFile(file);
-        if (file) {
-            setFormData({ ...formData, image_path: file.name });
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // Handle file upload if a new file is selected
-        let imagePath = formData.image_path;
-        if (selectedFile) {
-            // Here you would typically upload the file to your server
-            // For now, we'll use the file name as the path
-            // You might want to implement actual file upload logic here
-            imagePath = `/uploads/${selectedFile.name}`;
-        }
-
-        const itemData = {
-            ...formData,
-            image_path: imagePath,
-            xCoor: parseInt(formData.xCoor),
-            yCoor: parseInt(formData.yCoor),
-            zCoor: parseInt(formData.zCoor),
-            contained_in: parseInt(formData.contained_in),
-        };
-
-        if (editingItem) {
-            await updateItem(editingItem.id, itemData);
+    const handleSubmit = async (itemData, itemId) => {
+        if (itemId) {
+            await updateItem(itemId, itemData);
         } else {
             await createItem(itemData);
         }
-
-        handleCloseModal();
         fetchItems();
     };
 
@@ -224,82 +159,12 @@ const Items = () => {
                 </Box>
             )}
 
-            <Modal
+            <ItemModal
                 open={openModal}
                 onClose={handleCloseModal}
-                title={editingItem ? 'Edit Item' : 'Add Item'}
+                editingItem={editingItem}
                 onSubmit={handleSubmit}
-            >
-                <TextField
-                    label="Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                />
-                <TextField
-                    label="Description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    multiline
-                    rows={3}
-                />
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <input
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="image-upload"
-                        type="file"
-                        onChange={handleFileChange}
-                    />
-                    <label htmlFor="image-upload">
-                        <Button
-                            variant="outlined"
-                            component="span"
-                            startIcon={<CloudUploadIcon />}
-                            fullWidth
-                        >
-                            {selectedFile ? selectedFile.name : 'Upload Image'}
-                        </Button>
-                    </label>
-                    {selectedFile && (
-                        <Typography variant="caption" color="textSecondary">
-                            Selected: {selectedFile.name}
-                        </Typography>
-                    )}
-                </Box>
-                <TextField
-                    label="X Coordinate"
-                    type="number"
-                    value={formData.xCoor}
-                    onChange={(e) => setFormData({ ...formData, xCoor: e.target.value })}
-                />
-                <TextField
-                    label="Y Coordinate"
-                    type="number"
-                    value={formData.yCoor}
-                    onChange={(e) => setFormData({ ...formData, yCoor: e.target.value })}
-                />
-                <TextField
-                    label="Z Coordinate"
-                    type="number"
-                    value={formData.zCoor}
-                    onChange={(e) => setFormData({ ...formData, zCoor: e.target.value })}
-                />
-                <FormControl fullWidth>
-                    <InputLabel>Container</InputLabel>
-                    <Select
-                        value={formData.contained_in}
-                        label="Container"
-                        onChange={(e) => setFormData({ ...formData, contained_in: e.target.value })}
-                    >
-                        {containers.map((container) => (
-                            <MenuItem key={container.id} value={container.id}>
-                                {container.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Modal>
+            />
         </Box>
     );
 };
