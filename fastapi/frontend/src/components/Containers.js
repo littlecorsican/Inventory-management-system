@@ -25,6 +25,8 @@ const Containers = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRoom, setSelectedRoom] = useState('all');
 
+    const baseHost = process.env.REACT_APP_BACKEND_URL;
+
     useEffect(() => {
         fetchContainers();
         fetchRooms();
@@ -126,15 +128,34 @@ const Containers = () => {
                     <Grid item xs={12} sm={6} md={4} key={container.id}>
                         <Card>
                             <CardContent>
-                                <Typography variant="h6">{container.name}</Typography>
-                                <Typography color="textSecondary">
-                                    {container.description}
-                                </Typography>
-                                {container.room_id && (
-                                    <Typography variant="body2">
-                                        Room: {rooms.find(r => r.id === container.room_id)?.name}
-                                    </Typography>
-                                )}
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6} md={6} sx={{
+                                        overflow: "hidden"
+                                    }}>
+                                        <Typography variant="h6">{container.name}</Typography>
+                                        <Typography color="textSecondary">
+                                            {container.description}
+                                        </Typography>
+                                        {container.room_id && (
+                                            <Typography variant="body2">
+                                                Room: {rooms.find(r => r.id === container.room_id)?.name}
+                                            </Typography>
+                                        )}
+                                        {container.contained_in && (<Typography variant="body2">
+                                            Container: {containers.find(c => c.id === container.contained_in)?.name}
+                                        </Typography>)}
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6} sx={{
+                                        overflow: "hidden",
+                                    }}>
+                                        <Box>
+                                            {container.image_path && 
+                                            <img src={`${baseHost}\\${container.image_path}`} 
+                                                className="w-full h-auto" 
+                                            />}
+                                        </Box>
+                                    </Grid>
+                                </Grid>
                                 <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                                     <IconButton onClick={() => handleOpenModal(container)}>
                                         <EditIcon />

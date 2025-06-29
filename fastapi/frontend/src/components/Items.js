@@ -144,7 +144,7 @@ const Items = () => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={6} sx={{
-                                        overflow: "hidden"
+                                        overflow: "hidden",
                                     }}>
                                         <Box>
                                             {item.image_path && 
