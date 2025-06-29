@@ -16,6 +16,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { getAllContainers, createContainer, updateContainer, deleteContainer, getAllRooms } from '../services/api';
 import ContainerModal from '../modals/ContainerModal';
+import ImagePreviewModal from './ImagePreviewModal';
 
 const Containers = () => {
     const [containers, setContainers] = useState([]);
@@ -24,6 +25,7 @@ const Containers = () => {
     const [editingContainer, setEditingContainer] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRoom, setSelectedRoom] = useState('all');
+    const [imagePreview, setImagePreview] = useState({ open: false, src: '', alt: '' });
 
     const baseHost = process.env.REACT_APP_BACKEND_URL;
 
@@ -80,6 +82,18 @@ const Containers = () => {
             await deleteContainer(id);
             fetchContainers();
         }
+    };
+
+    const handleImageClick = (imagePath, containerName) => {
+        setImagePreview({
+            open: true,
+            src: `${baseHost}\\${imagePath}`,
+            alt: `${containerName} image`
+        });
+    };
+
+    const handleCloseImagePreview = () => {
+        setImagePreview({ open: false, src: '', alt: '' });
     };
 
     return (
@@ -150,8 +164,11 @@ const Containers = () => {
                                     }}>
                                         <Box>
                                             {container.image_path && 
-                                            <img src={`${baseHost}\\${container.image_path}`} 
-                                                className="w-full h-auto" 
+                                            <img 
+                                                src={`${baseHost}\\${container.image_path}`} 
+                                                className="w-full h-auto cursor-pointer hover:opacity-80 transition-opacity" 
+                                                onClick={() => handleImageClick(container.image_path, container.name)}
+                                                alt={`${container.name} image`}
                                             />}
                                         </Box>
                                     </Grid>
@@ -184,6 +201,13 @@ const Containers = () => {
                 onClose={handleCloseModal}
                 editingContainer={editingContainer}
                 onSubmit={handleSubmit}
+            />
+
+            <ImagePreviewModal
+                open={imagePreview.open}
+                onClose={handleCloseImagePreview}
+                imageSrc={imagePreview.src}
+                imageAlt={imagePreview.alt}
             />
         </Box>
     );
