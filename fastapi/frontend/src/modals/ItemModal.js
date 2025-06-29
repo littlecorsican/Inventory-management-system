@@ -12,10 +12,13 @@ import {
 import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '@mui/icons-material';
 import Modal from '../components/Modal';
 import { getAllContainers, uploadImage } from '../services/api';
+import CameraCapture from '../components/CameraCapture';
+
 
 const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
     const [containers, setContainers] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [cameraOpen, setCameraOpen] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -105,7 +108,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
     };
 
     const startCamera = () => {
-        alert("dasfd")
+        setCameraOpen(true)
     }
 
     return (
@@ -145,6 +148,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                         {selectedFile ? selectedFile.name : 'Upload Image'}
                     </Button>
                 </label>
+                {cameraOpen && <CameraCapture />}
                 <Button
                     variant="outlined"
                     component="span"

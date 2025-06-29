@@ -9,14 +9,16 @@ import {
     InputLabel,
     Typography
 } from '@mui/material';
-import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
+import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '@mui/icons-material';
 import Modal from '../components/Modal';
-import { getAllRooms, getAllContainers } from '../services/api';
+import { getAllRooms, getAllContainers, uploadImage } from '../services/api';
+import CameraCapture from '../components/CameraCapture';
 
 const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
     const [rooms, setRooms] = useState([]);
     const [containers, setContainers] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [cameraOpen, setCameraOpen] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -62,7 +64,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
         setContainers(data.items);
     };
 
-    const handleFileChange = (event) => {
+    const handleUploadImage = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
         if (file) {
@@ -72,19 +74,12 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // Handle file upload if a new file is selected
-        let imagePath = formData.image_path;
-        if (selectedFile) {
-            // Here you would typically upload the file to your server
-            // For now, we'll use the file name as the path
-            // You might want to implement actual file upload logic here
-            imagePath = `/uploads/${selectedFile.name}`;
-        }
+
+        const uploadedName = selectedFile ? await uploadImage(selectedFile) : null
 
         const containerData = {
             ...formData,
-            image_path: imagePath,
+            image_path: uploadedName?.saved_path,
             room_id: formData.room_id ? parseInt(formData.room_id) : null,
             contained_in: formData.contained_in ? parseInt(formData.contained_in) : null,
         };
@@ -97,6 +92,10 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
         setSelectedFile(null);
         onClose();
     };
+
+    const startCamera = () => {
+        setCameraOpen(true)
+    }
 
     return (
         <Modal
@@ -118,13 +117,13 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                 multiline
                 rows={3}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                 <input
                     accept="image/*"
                     style={{ display: 'none' }}
                     id="image-upload"
                     type="file"
-                    onChange={handleFileChange}
+                    onChange={handleUploadImage}
                 />
                 <label htmlFor="image-upload">
                     <Button
@@ -136,6 +135,15 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                         {selectedFile ? selectedFile.name : 'Upload Image'}
                     </Button>
                 </label>
+                {cameraOpen && <CameraCapture />}
+                <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<PhotoCameraIcon />}
+                    onClick={startCamera}
+                >
+                    Capture using camera
+                </Button>
                 {selectedFile && (
                     <Typography variant="caption" color="textSecondary">
                         Selected: {selectedFile.name}
