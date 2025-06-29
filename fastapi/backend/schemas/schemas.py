@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
+from fastapi import File
 
 # Room Schemas
 class RoomBase(BaseModel):
@@ -59,3 +60,7 @@ class PaginatedResponse(BaseModel):
     page: int
     size: int
     items: List[dict] 
+
+class ImageUploadResponse(BaseModel):
+    saved_path: str
+

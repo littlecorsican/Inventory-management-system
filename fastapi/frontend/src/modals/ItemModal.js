@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '@mui/icons-material';
 import Modal from '../components/Modal';
-import { getAllContainers } from '../services/api';
+import { getAllContainers, uploadImage } from '../services/api';
 
 const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
     const [containers, setContainers] = useState([]);
@@ -65,7 +65,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         const file = event.target.files[0];
         setSelectedFile(file);
         if (file) {
-            setFormData({ ...formData, image_path: file.name });
+            setFormData({ ...formData, image_path: file });
         }
     };
 
@@ -73,22 +73,27 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         e.preventDefault();
         
         // Handle file upload if a new file is selected
-        let imagePath = formData.image_path;
-        if (selectedFile) {
-            // Here you would typically upload the file to your server
-            // For now, we'll use the file name as the path
-            // You might want to implement actual file upload logic here
-            imagePath = `/uploads/${selectedFile.name}`;
-        }
+        // let imagePath = formData.image_path;
+        // if (selectedFile) {
+        //     // Here you would typically upload the file to your server
+        //     // For now, we'll use the file name as the path
+        //     // You might want to implement actual file upload logic here
+        //     imagePath = `/uploads/${selectedFile.name}`;
+        // }
+
+        const uploadedName = selectedFile ? await uploadImage(selectedFile) : null
+        
 
         const itemData = {
             ...formData,
-            image_path: imagePath,
-            xCoor: parseInt(formData.xCoor),
-            yCoor: parseInt(formData.yCoor),
-            zCoor: parseInt(formData.zCoor),
-            contained_in: parseInt(formData.contained_in),
+            image_path: uploadedName?.saved_path,
+            xCoor: formData.xCoor ? parseInt(formData.xCoor) : null,
+            yCoor: formData.yCoor ? parseInt(formData.yCoor) : null,
+            zCoor: formData.zCoor ? parseInt(formData.zCoor) : null,
+            contained_in: formData.contained_in ? parseInt(formData.contained_in) : null,
         };
+
+        console.log("itemData", itemData)
 
         await onSubmit(itemData, editingItem?.id);
         onClose();

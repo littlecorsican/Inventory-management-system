@@ -79,4 +79,12 @@ export const updateItem = async (id, itemData) => {
 export const deleteItem = async (id) => {
     const data = await http.delete(`/items/${id}`)
     return data;
+};
+
+export const uploadImage = async (fileData) => {
+    console.log("fileData", fileData)
+    const formData = new FormData();
+    formData.append("file", fileData);
+    const data = await http.post(`/image/uploadImage`, formData, {}, false)
+    return data;
 }; 

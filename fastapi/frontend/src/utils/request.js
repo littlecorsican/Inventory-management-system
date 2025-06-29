@@ -29,21 +29,24 @@ const responseInterceptor = async (response) => {
 };
 
 // Main request function
-const request = async (endpoint, options = {}) => {
+const request = async (endpoint, options = {}, setDefaultHeader=true) => {
+  console.log("options", options)
   try {
     const url = `${BASE_URL}${endpoint}`;
     const config = {
       ...options,
       headers: {
-        ...defaultHeaders,
+        ...setDefaultHeader && defaultHeaders,
         ...options.headers,
       },
     };
 
     // Stringify body if it exists and is not already a string
-    if (config.body && typeof config.body === 'object') {
+    if (config.body && typeof config.body === 'object' && config.headers["Content-Type"] === "application/json") {
       config.body = JSON.stringify(config.body);
     }
+
+    console.log("config", config)
 
     // Apply request interceptor
     const interceptedConfig = requestInterceptor(config);
@@ -62,11 +65,11 @@ const request = async (endpoint, options = {}) => {
 // HTTP method helpers
 export const http = {
   get: (endpoint, options = {}) => request(endpoint, { ...options, method: 'GET' }),
-  post: (endpoint, data, options = {}) => request(endpoint, {
+  post: (endpoint, data, options = {}, setDefaultHeader) => request(endpoint, {
     ...options,
     method: 'POST',
     body: data,
-  }),
+  }, setDefaultHeader),
   put: (endpoint, data, options = {}) => request(endpoint, {
     ...options,
     method: 'PUT',

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 import models.models as models
-from routers import items, containers, rooms
+from routers import items, containers, rooms, image
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -26,6 +26,7 @@ app.add_middleware(
 app.include_router(items.router)
 app.include_router(containers.router)
 app.include_router(rooms.router)
+app.include_router(image.router)
 
 @app.get("/")
 def read_root():
