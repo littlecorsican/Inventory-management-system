@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 import models.models as models
 from routers import items, containers, rooms, image
+from fastapi.staticfiles import StaticFiles
+
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -12,6 +14,8 @@ app = FastAPI(
     description="A FastAPI backend for managing inventory items, containers, and rooms",
     version="1.0.0"
 )
+
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 # Configure CORS
 app.add_middleware(
