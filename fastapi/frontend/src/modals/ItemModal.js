@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '@mui/icons-material';
 import Modal from '../components/Modal';
-import { getAllContainers, uploadImage } from '../services/api';
+import { getAllContainers, uploadBase64, uploadImage } from '../services/api';
 import CameraCapture from '../components/CameraCapture';
 import { truncateFilename } from '../utils/file';
 
@@ -19,6 +19,7 @@ import { truncateFilename } from '../utils/file';
 const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
     const [containers, setContainers] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [imageData, setImageData] = useState(null);
     const [cameraOpen, setCameraOpen] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
@@ -85,8 +86,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         //     imagePath = `/uploads/${selectedFile.name}`;
         // }
 
-        const uploadedName = selectedFile ? await uploadImage(selectedFile) : null
-        
+        const uploadedName = selectedFile ? await uploadImage(selectedFile) : await uploadBase64(imageData)
 
         const itemData = {
             ...formData,
@@ -149,15 +149,21 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                         {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
-                {cameraOpen && <CameraCapture />}
-                <Button
+                {cameraOpen && <CameraCapture setImageData={setImageData} setCameraOpen={setCameraOpen} />}
+                {!cameraOpen && <Button
                     variant="outlined"
                     component="span"
                     startIcon={<PhotoCameraIcon />}
                     onClick={startCamera}
                 >
                     Capture using camera
-                </Button>
+                </Button>}
+                {imageData && (
+                    <div>
+                    <h4>Captured Image:</h4>
+                    <img src={imageData} alt="Snapshot" />
+                    </div>
+                )}
                 {/* {selectedFile && (
                     <Typography variant="caption" color="textSecondary">
                         Selected: {selectedFile.name}

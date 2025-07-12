@@ -194,12 +194,12 @@ const Items = () => {
                 </Box>
             )}
 
-            <ItemModal
+            {openModal && <ItemModal
                 open={openModal}
                 onClose={handleCloseModal}
                 editingItem={editingItem}
                 onSubmit={handleSubmit}
-            />
+            />}
 
             <ImagePreviewModal
                 open={imagePreview.open}

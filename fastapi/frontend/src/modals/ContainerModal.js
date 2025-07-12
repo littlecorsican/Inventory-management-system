@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '@mui/icons-material';
 import Modal from '../components/Modal';
-import { getAllRooms, getAllContainers, uploadImage } from '../services/api';
+import { getAllRooms, getAllContainers, uploadImage, uploadBase64 } from '../services/api';
 import CameraCapture from '../components/CameraCapture';
 import { truncateFilename } from '../utils/file';
 
@@ -20,6 +20,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
     const [rooms, setRooms] = useState([]);
     const [containers, setContainers] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [imageData, setImageData] = useState(null);
     const [cameraOpen, setCameraOpen] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
@@ -77,7 +78,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const uploadedName = selectedFile ? await uploadImage(selectedFile) : null
+        const uploadedName = selectedFile ? await uploadImage(selectedFile) : await uploadBase64(imageData)
 
         const containerData = {
             ...formData,
@@ -137,15 +138,21 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                         {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
-                {cameraOpen && <CameraCapture />}
-                <Button
+                {cameraOpen && <CameraCapture setImageData={setImageData} setCameraOpen={setCameraOpen} />}
+                {!cameraOpen && <Button
                     variant="outlined"
                     component="span"
                     startIcon={<PhotoCameraIcon />}
                     onClick={startCamera}
                 >
                     Capture using camera
-                </Button>
+                </Button>}
+                {imageData && (
+                    <div>
+                    <h4>Captured Image:</h4>
+                    <img src={imageData} alt="Snapshot" />
+                    </div>
+                )}
             </Box>
             <FormControl fullWidth>
                 <InputLabel>Room</InputLabel>

@@ -64,3 +64,5 @@ class PaginatedResponse(BaseModel):
 class ImageUploadResponse(BaseModel):
     saved_path: str
 
+class Base64UploadRequest(BaseModel):
+    base64Image: str

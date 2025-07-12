@@ -196,12 +196,12 @@ const Containers = () => {
                 </Box>
             )}
 
-            <ContainerModal
+            {openModal && <ContainerModal
                 open={openModal}
                 onClose={handleCloseModal}
                 editingContainer={editingContainer}
                 onSubmit={handleSubmit}
-            />
+            />}
 
             <ImagePreviewModal
                 open={imagePreview.open}

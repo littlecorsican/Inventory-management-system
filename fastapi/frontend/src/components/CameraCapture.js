@@ -1,9 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
+import {
+    Button,
+} from '@mui/material';
 
-export default function CameraCapture() {
+
+export default function CameraCapture({ setImageData, setCameraOpen }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [imageDataUrl, setImageDataUrl] = useState(null);
 
   // Start the camera on component mount
   useEffect(() => {
@@ -25,21 +28,20 @@ export default function CameraCapture() {
     const ctx = canvas.getContext("2d");
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL("image/png");
-    setImageDataUrl(dataUrl);
+    setImageData(dataUrl);
+    setCameraOpen(false)
   };
 
   return (
     <div>
       <video ref={videoRef} autoPlay playsInline width="320" height="240" />
       <br />
-      <button onClick={captureImage}>Take Picture</button>
+      <Button
+        variant="outlined"
+        component="span"
+        onClick={captureImage}
+      >Take Picture</Button>
       <canvas ref={canvasRef} width="320" height="240" style={{ display: "none" }} />
-      {imageDataUrl && (
-        <div>
-          <h4>Captured Image:</h4>
-          <img src={imageDataUrl} alt="Snapshot" />
-        </div>
-      )}
     </div>
   );
 }
