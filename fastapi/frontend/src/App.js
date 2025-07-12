@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import {
     AppBar,
@@ -10,7 +10,14 @@ import {
     CssBaseline,
     ThemeProvider,
     createTheme,
+    useMediaQuery,
+    useTheme,
+    IconButton,
+    Menu,
+    MenuItem,
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+
 import Rooms from './components/Rooms';
 import Containers from './components/Containers';
 import Items from './components/Items';
@@ -28,6 +35,13 @@ const theme = createTheme({
 });
 
 function App() {
+    const muiTheme = useTheme();
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuClose = () => setAnchorEl(null);
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -38,18 +52,51 @@ function App() {
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 Inventory Management System
                             </Typography>
-                            <Button color="inherit" component={Link} to="/">
-                                Dashboard
-                            </Button>
-                            <Button color="inherit" component={Link} to="/rooms">
-                                Rooms
-                            </Button>
-                            <Button color="inherit" component={Link} to="/containers">
-                                Containers
-                            </Button>
-                            <Button color="inherit" component={Link} to="/items">
-                                Items
-                            </Button>
+
+                            {isMobile ? (
+                                <>
+                                    <IconButton
+                                        edge="end"
+                                        color="inherit"
+                                        onClick={handleMenuOpen}
+                                    >
+                                        <MenuIcon />
+                                    </IconButton>
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={handleMenuClose}
+                                    >
+                                        <MenuItem component={Link} to="/" onClick={handleMenuClose}>
+                                            Dashboard
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/rooms" onClick={handleMenuClose}>
+                                            Rooms
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/containers" onClick={handleMenuClose}>
+                                            Containers
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/items" onClick={handleMenuClose}>
+                                            Items
+                                        </MenuItem>
+                                    </Menu>
+                                </>
+                            ) : (
+                                <>
+                                    <Button color="inherit" component={Link} to="/">
+                                        Dashboard
+                                    </Button>
+                                    <Button color="inherit" component={Link} to="/rooms">
+                                        Rooms
+                                    </Button>
+                                    <Button color="inherit" component={Link} to="/containers">
+                                        Containers
+                                    </Button>
+                                    <Button color="inherit" component={Link} to="/items">
+                                        Items
+                                    </Button>
+                                </>
+                            )}
                         </Toolbar>
                     </AppBar>
 

@@ -13,6 +13,7 @@ import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '
 import Modal from '../components/Modal';
 import { getAllContainers, uploadImage } from '../services/api';
 import CameraCapture from '../components/CameraCapture';
+import { truncateFilename } from '../utils/file';
 
 
 const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
@@ -131,7 +132,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                 multiline
                 rows={3}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: { xs: "column", md: 'row' }, gap: 2 }}>
                 <input
                     accept="image/*"
                     style={{ display: 'none' }}
@@ -145,7 +146,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                         component="span"
                         startIcon={<CloudUploadIcon />}
                     >
-                        {selectedFile ? selectedFile.name : 'Upload Image'}
+                        {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
                 {cameraOpen && <CameraCapture />}
@@ -157,11 +158,11 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                 >
                     Capture using camera
                 </Button>
-                {selectedFile && (
+                {/* {selectedFile && (
                     <Typography variant="caption" color="textSecondary">
                         Selected: {selectedFile.name}
                     </Typography>
-                )}
+                )} */}
             </Box>
             <Box display="flex" gap={2}>
                 <TextField

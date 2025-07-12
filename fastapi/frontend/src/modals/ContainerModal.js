@@ -13,6 +13,8 @@ import { CloudUpload as CloudUploadIcon, PhotoCamera as PhotoCameraIcon } from '
 import Modal from '../components/Modal';
 import { getAllRooms, getAllContainers, uploadImage } from '../services/api';
 import CameraCapture from '../components/CameraCapture';
+import { truncateFilename } from '../utils/file';
+
 
 const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
     const [rooms, setRooms] = useState([]);
@@ -117,7 +119,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                 multiline
                 rows={3}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: { xs: "column", md: 'row' }, gap: 2 }}>
                 <input
                     accept="image/*"
                     style={{ display: 'none' }}
@@ -132,7 +134,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                         startIcon={<CloudUploadIcon />}
                         fullWidth
                     >
-                        {selectedFile ? selectedFile.name : 'Upload Image'}
+                        {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
                 {cameraOpen && <CameraCapture />}
@@ -144,11 +146,6 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                 >
                     Capture using camera
                 </Button>
-                {selectedFile && (
-                    <Typography variant="caption" color="textSecondary">
-                        Selected: {selectedFile.name}
-                    </Typography>
-                )}
             </Box>
             <FormControl fullWidth>
                 <InputLabel>Room</InputLabel>
