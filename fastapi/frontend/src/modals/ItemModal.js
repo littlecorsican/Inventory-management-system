@@ -40,13 +40,13 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
             setFormData({
                 name: editingItem.name,
                 description: editingItem.description,
-                image_path: editingItem.image_path,
+                image_path: editingItem.image_path || null,
                 xCoor: editingItem.xCoor,
                 yCoor: editingItem.yCoor,
                 zCoor: editingItem.zCoor,
                 contained_in: editingItem.contained_in,
             });
-            setSelectedFile(editingItem.image_path);
+            setSelectedFile(editingItem.image_path || null);
         } else {
             setFormData({
                 name: '',
@@ -86,7 +86,18 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         //     imagePath = `/uploads/${selectedFile.name}`;
         // }
 
-        const uploadedName = selectedFile ? await uploadImage(selectedFile) : await uploadBase64(imageData)
+        let uploadedName = {
+            saved_path: ""
+        };
+
+        if (typeof selectedFile === "string") {
+            uploadedName.saved_path = selectedFile;
+        } else if (!selectedFile && imageData) {
+            uploadedName = await uploadBase64(imageData);
+        } else if (selectedFile && typeof selectedFile !== "string") {
+            uploadedName = await uploadImage(selectedFile);
+        }
+
 
         const itemData = {
             ...formData,

@@ -78,7 +78,17 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const uploadedName = selectedFile ? await uploadImage(selectedFile) : await uploadBase64(imageData)
+        let uploadedName = {
+            saved_path: ""
+        };
+
+        if (typeof selectedFile === "string") {
+            uploadedName.saved_path = selectedFile;
+        } else if (!selectedFile && imageData) {
+            uploadedName = await uploadBase64(imageData);
+        } else if (selectedFile && typeof selectedFile !== "string") {
+            uploadedName = await uploadImage(selectedFile);
+        }
 
         const containerData = {
             ...formData,
