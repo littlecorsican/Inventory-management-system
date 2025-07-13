@@ -25,9 +25,6 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         name: '',
         description: '',
         image_path: '',
-        xCoor: '',
-        yCoor: '',
-        zCoor: '',
         contained_in: '',
     });
 
@@ -41,9 +38,6 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                 name: editingItem.name,
                 description: editingItem.description,
                 image_path: editingItem.image_path || null,
-                xCoor: editingItem.xCoor,
-                yCoor: editingItem.yCoor,
-                zCoor: editingItem.zCoor,
                 contained_in: editingItem.contained_in,
             });
             setSelectedFile(editingItem.image_path || null);
@@ -52,9 +46,6 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                 name: '',
                 description: '',
                 image_path: '',
-                xCoor: '',
-                yCoor: '',
-                zCoor: '',
                 contained_in: '',
             });
             setSelectedFile(null);
@@ -102,9 +93,6 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
         const itemData = {
             ...formData,
             image_path: uploadedName?.saved_path,
-            xCoor: formData.xCoor ? parseInt(formData.xCoor) : null,
-            yCoor: formData.yCoor ? parseInt(formData.yCoor) : null,
-            zCoor: formData.zCoor ? parseInt(formData.zCoor) : null,
             contained_in: formData.contained_in ? parseInt(formData.contained_in) : null,
         };
 
@@ -180,26 +168,6 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                         Selected: {selectedFile.name}
                     </Typography>
                 )} */}
-            </Box>
-            <Box display="flex" gap={2}>
-                <TextField
-                    label="X Coordinate"
-                    type="number"
-                    value={formData.xCoor}
-                    onChange={(e) => setFormData({ ...formData, xCoor: e.target.value })}
-                />
-                <TextField
-                    label="Y Coordinate"
-                    type="number"
-                    value={formData.yCoor}
-                    onChange={(e) => setFormData({ ...formData, yCoor: e.target.value })}
-                />
-                <TextField
-                    label="Z Coordinate"
-                    type="number"
-                    value={formData.zCoor}
-                    onChange={(e) => setFormData({ ...formData, zCoor: e.target.value })}
-                />
             </Box>
             <FormControl fullWidth>
                 <InputLabel>Container</InputLabel>
