@@ -46,7 +46,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                 zCoor: editingItem.zCoor,
                 contained_in: editingItem.contained_in,
             });
-            setSelectedFile(null);
+            setSelectedFile(editingItem.image_path);
         } else {
             setFormData({
                 name: '',
@@ -146,7 +146,7 @@ const ItemModal = ({ open, onClose, editingItem, onSubmit }) => {
                         component="span"
                         startIcon={<CloudUploadIcon />}
                     >
-                        {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
+                        {selectedFile ? typeof selectedFile === "string" ? truncateFilename(selectedFile) : truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
                 {cameraOpen && <CameraCapture setImageData={setImageData} setCameraOpen={setCameraOpen} />}

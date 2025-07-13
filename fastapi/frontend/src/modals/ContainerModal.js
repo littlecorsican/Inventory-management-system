@@ -44,7 +44,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                 room_id: editingContainer.room_id || '',
                 contained_in: editingContainer.contained_in || '',
             });
-            setSelectedFile(null);
+            setSelectedFile(editingContainer.image_path);
         } else {
             setFormData({
                 name: '',
@@ -135,7 +135,7 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                         startIcon={<CloudUploadIcon />}
                         fullWidth
                     >
-                        {selectedFile ? truncateFilename(selectedFile.name) : 'Upload Image'}
+                        {selectedFile ? typeof selectedFile === "string" ? truncateFilename(selectedFile) : truncateFilename(selectedFile.name) : 'Upload Image'}
                     </Button>
                 </label>
                 {cameraOpen && <CameraCapture setImageData={setImageData} setCameraOpen={setCameraOpen} />}
