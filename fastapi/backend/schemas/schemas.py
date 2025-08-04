@@ -12,20 +12,15 @@ class RoomBase(BaseModel):
 class RoomCreate(RoomBase):
     pass
 
-class Room(RoomBase):
-    id: int
-
-    class Config:
-        from_attributes = True
 
 # Container Schemas
 class ContainerBase(BaseModel):
     name: str
     description: str
     image_path: Optional[str]
-    xCoor: Optional[int]
-    yCoor: Optional[int]
-    zCoor: Optional[int]
+    # xCoor: Optional[int]
+    # yCoor: Optional[int]
+    # zCoor: Optional[int]
     contained_in: Optional[int] = None
     room_id: Optional[int] = None
 
@@ -37,6 +32,15 @@ class Container(ContainerBase):
 
     class Config:
         from_attributes = True
+        orm_mode = True
+
+class Room(RoomBase):
+    id: int
+    containers: List[Container] = []
+
+    class Config:
+        from_attributes = True
+        orm_mode = True
 
 # Item Schemas
 class ItemBase(BaseModel):

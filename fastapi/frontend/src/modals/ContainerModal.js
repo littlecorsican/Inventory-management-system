@@ -44,9 +44,9 @@ const ContainerModal = ({ open, onClose, editingContainer, onSubmit }) => {
                 name: editingContainer.name,
                 description: editingContainer.description,
                 image_path: editingContainer.image_path,
-                xCoor: editingItem.xCoor,
-                yCoor: editingItem.yCoor,
-                zCoor: editingItem.zCoor,
+                // xCoor: editingItem.xCoor,
+                // yCoor: editingItem.yCoor,
+                // zCoor: editingItem.zCoor,
                 room_id: editingContainer.room_id || '',
                 contained_in: editingContainer.contained_in || '',
             });

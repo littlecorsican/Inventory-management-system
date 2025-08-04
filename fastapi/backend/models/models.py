@@ -11,7 +11,7 @@ class Room(Base):
     length = Column(Integer)
     height = Column(Integer)
     
-    containers = relationship("Container", back_populates="room")
+    containers = relationship("Container", back_populates="room", lazy="joined")
 
 class Container(Base):
     __tablename__ = "containers"

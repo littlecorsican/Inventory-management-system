@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 from database import get_db
 import models.models as models
@@ -29,7 +29,7 @@ def get_rooms(
 
 @router.get("/{room_id}", response_model=schemas.Room)
 def get_room(room_id: int, db: Session = Depends(get_db)):
-    db_room = db.query(models.Room).filter(models.Room.id == room_id).first()
+    db_room = db.query(models.Room).options(joinedload(models.Room.containers)).filter(models.Room.id == room_id).first()
     if db_room is None:
         raise HTTPException(status_code=404, detail="Room not found")
     return db_room
