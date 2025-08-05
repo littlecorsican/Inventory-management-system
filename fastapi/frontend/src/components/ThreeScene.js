@@ -87,18 +87,18 @@ const ThreeScene = ({ selectedRoom }) => {
                 // Add container name as text
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
-                canvas.width = 256;
-                canvas.height = 64;
+                canvas.width = 1024;
+                canvas.height = 256;
                 context.fillStyle = '#ffffff';
                 context.fillRect(0, 0, canvas.width, canvas.height);
                 context.fillStyle = '#000000';
-                context.font = '24px Arial';
+                context.font = '120px Arial';
                 context.textAlign = 'center';
-                context.fillText(container.name || `Container ${index + 1}`, canvas.width / 2, canvas.height / 2 + 8);
+                context.fillText(container.name || `Container ${index + 1}`, canvas.width / 2, canvas.height / 2 + 32);
 
                 const texture = new THREE.CanvasTexture(canvas);
                 const textMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-                const textGeometry = new THREE.PlaneGeometry(2, 0.5);
+                const textGeometry = new THREE.PlaneGeometry(8, 2);
                 const textMesh = new THREE.Mesh(textGeometry, textMaterial);
                 
                 textMesh.position.set(0, containerSize / 2 + 1, 0);
