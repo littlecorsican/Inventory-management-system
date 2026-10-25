@@ -1,0 +1,13 @@
+services:
+  inventory:
+    build: .
+    image: home-inventory:latest
+    container_name: home-inventory
+    ports:
+      - "8000:8000"
+    volumes:
+      - inventory-data:/data
+    restart: unless-stopped
+
+volumes:
+  inventory-data:
