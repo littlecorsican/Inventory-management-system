@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const ThreeScene = ({ selectedRoom }) => {
+const ThreeScene = ({ selectedRoom, onContainerClick }) => {
     const mountRef = useRef(null);
     const sceneRef = useRef(null);
     const rendererRef = useRef(null);
     const cameraRef = useRef(null);
     const controlsRef = useRef(null);
+    const raycasterRef = useRef(null);
+    const mouseRef = useRef(null);
+    const hoveredContainerRef = useRef(null);
 
     useEffect(() => {
         if (!mountRef.current) return;
@@ -36,6 +39,12 @@ const ThreeScene = ({ selectedRoom }) => {
         rendererRef.current = renderer;
 
         mountRef.current.appendChild(renderer.domElement);
+
+        // Raycaster for click detection
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        raycasterRef.current = raycaster;
+        mouseRef.current = mouse;
 
         // Lighting
         const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
@@ -77,6 +86,15 @@ const ThreeScene = ({ selectedRoom }) => {
                 cube.castShadow = true;
                 cube.receiveShadow = true;
 
+                // Store container data on the cube for click handling
+                cube.userData = {
+                    container: container,
+                    index: index,
+                    type: 'container',
+                    originalScale: 1,
+                    originalTextScale: 1
+                };
+
                 // Position containers side by side
                 cube.position.set(
                     index * spacing - (containers.length - 1) * spacing / 2,
@@ -102,6 +120,7 @@ const ThreeScene = ({ selectedRoom }) => {
                 const textMesh = new THREE.Mesh(textGeometry, textMaterial);
                 
                 textMesh.position.set(0, containerSize / 2 + 1, 0);
+                textMesh.userData = { type: 'text', parentContainer: cube };
                 cube.add(textMesh);
 
                 scene.add(cube);
@@ -112,6 +131,104 @@ const ThreeScene = ({ selectedRoom }) => {
         if (selectedRoom) {
             createContainers(selectedRoom);
         }
+
+        // Hover handler for containers
+        const handleHover = (event) => {
+            // Calculate mouse position in normalized device coordinates
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            // Update the picking ray with the camera and mouse position
+            raycaster.setFromCamera(mouse, camera);
+
+            // Calculate objects intersecting the picking ray
+            const intersects = raycaster.intersectObjects(scene.children, true);
+
+            let currentHoveredContainer = null;
+
+            if (intersects.length > 0) {
+                // Find the first intersected object that is a container
+                const intersectedObject = intersects[0].object;
+                
+                // Check if the hovered object is a container (either the cube itself or its child text mesh)
+                if (intersectedObject.userData.type === 'container') {
+                    currentHoveredContainer = intersectedObject;
+                } else if (intersectedObject.userData.type === 'text' && intersectedObject.userData.parentContainer) {
+                    currentHoveredContainer = intersectedObject.userData.parentContainer;
+                }
+            }
+
+            // Handle hover state changes
+            if (currentHoveredContainer !== hoveredContainerRef.current) {
+                // Reset previous hovered container
+                if (hoveredContainerRef.current) {
+                    const prevContainer = hoveredContainerRef.current;
+                    prevContainer.scale.set(1, 1, 1);
+                    
+                    // Reset text scale
+                    prevContainer.children.forEach(child => {
+                        if (child.userData.type === 'text') {
+                            child.scale.set(1, 1, 1);
+                        }
+                    });
+                }
+
+                // Set new hovered container
+                if (currentHoveredContainer) {
+                    currentHoveredContainer.scale.set(1.4, 1.4, 1.4);
+                    
+                    // Scale up text
+                    currentHoveredContainer.children.forEach(child => {
+                        if (child.userData.type === 'text') {
+                            child.scale.set(1.5, 1.5, 1.5);
+                        }
+                    });
+                }
+
+                hoveredContainerRef.current = currentHoveredContainer;
+            }
+        };
+
+        // Click handler for containers
+        const handleClick = (event) => {
+            // Calculate mouse position in normalized device coordinates
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            // Update the picking ray with the camera and mouse position
+            raycaster.setFromCamera(mouse, camera);
+
+            // Calculate objects intersecting the picking ray
+            const intersects = raycaster.intersectObjects(scene.children, true);
+
+            if (intersects.length > 0) {
+                // Find the first intersected object that is a container
+                const intersectedObject = intersects[0].object;
+                
+                // Check if the clicked object is a container (either the cube itself or its child text mesh)
+                let containerCube = null;
+                if (intersectedObject.userData.type === 'container') {
+                    containerCube = intersectedObject;
+                } else if (intersectedObject.userData.type === 'text' && intersectedObject.userData.parentContainer) {
+                    containerCube = intersectedObject.userData.parentContainer;
+                }
+
+                if (containerCube && onContainerClick) {
+                    // Call the callback with container data
+                    onContainerClick(containerCube.userData.container, containerCube.userData.index);
+                    
+                    // Visual feedback - briefly change color
+                    const originalColor = containerCube.material.color.getHex();
+                    containerCube.material.color.setHex(0xffff00); // Yellow highlight
+                    
+                    setTimeout(() => {
+                        containerCube.material.color.setHex(originalColor);
+                    }, 200);
+                }
+            }
+        };
 
         // Camera controls
         let isMouseDown = false;
@@ -128,6 +245,9 @@ const ThreeScene = ({ selectedRoom }) => {
         };
 
         const handleMouseMove = (event) => {
+            // Handle hover regardless of mouse down state
+            handleHover(event);
+
             if (!isMouseDown) return;
 
             const deltaX = event.clientX - mouseX;
@@ -140,7 +260,15 @@ const ThreeScene = ({ selectedRoom }) => {
             mouseY = event.clientY;
         };
 
-        const handleMouseUp = () => {
+        const handleMouseUp = (event) => {
+            // Only trigger click if mouse hasn't moved much (to distinguish from drag)
+            const deltaX = Math.abs(event.clientX - mouseX);
+            const deltaY = Math.abs(event.clientY - mouseY);
+            
+            if (deltaX < 5 && deltaY < 5) {
+                handleClick(event);
+            }
+            
             isMouseDown = false;
         };
 
@@ -204,14 +332,14 @@ const ThreeScene = ({ selectedRoom }) => {
             
             renderer.dispose();
         };
-    }, [selectedRoom]);
+    }, [selectedRoom, onContainerClick]);
 
     return (
         <div 
             ref={mountRef} 
             style={{ 
                 width: '100%', 
-                height: '400px',
+                height: '800px',
                 border: '1px solid #ccc',
                 borderRadius: '8px',
                 overflow: 'hidden'

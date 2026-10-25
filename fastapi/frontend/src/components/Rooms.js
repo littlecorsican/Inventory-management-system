@@ -60,6 +60,10 @@ const Rooms = () => {
         setSelectedRoom(data);
     }
 
+    const onContainerClick = (container, index) => {
+        console.log("onContainerClick", container , index)
+    }
+
     return (
         <Box sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -74,7 +78,7 @@ const Rooms = () => {
                     {selectedRoom ? `3D Visualization - ${selectedRoom.name}` : '3D Room Visualization'}
                 </Typography>
                 <div id="animation-container">
-                    <ThreeScene selectedRoom={selectedRoom} />
+                    <ThreeScene selectedRoom={selectedRoom} onContainerClick={onContainerClick} />
                 </div>
             </Box>
 

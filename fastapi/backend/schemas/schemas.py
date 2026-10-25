@@ -18,9 +18,12 @@ class ContainerBase(BaseModel):
     name: str
     description: str
     image_path: Optional[str]
-    # xCoor: Optional[int]
-    # yCoor: Optional[int]
-    # zCoor: Optional[int]
+    xCoor: Optional[int]
+    yCoor: Optional[int]
+    zCoor: Optional[int]
+    width: Optional[int]
+    height: Optional[int]
+    length: Optional[int]
     contained_in: Optional[int] = None
     room_id: Optional[int] = None
 

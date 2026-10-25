@@ -11,6 +11,7 @@ class Room(Base):
     length = Column(Integer)
     height = Column(Integer)
     
+    
     containers = relationship("Container", back_populates="room", lazy="joined")
 
 class Container(Base):
@@ -18,6 +19,12 @@ class Container(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    xCoor = Column(Integer)
+    yCoor = Column(Integer)
+    zCoor = Column(Integer)
+    width = Column(Integer)
+    height = Column(Integer)
+    length = Column(Integer)
     description = Column(String)
     image_path = Column(String)
     contained_in = Column(Integer, ForeignKey("containers.id"), nullable=True)
@@ -35,9 +42,6 @@ class Item(Base):
     name = Column(String, index=True)
     description = Column(String)
     image_path = Column(String)
-    xCoor = Column(Integer)
-    yCoor = Column(Integer)
-    zCoor = Column(Integer)
     contained_in = Column(Integer, ForeignKey("containers.id"))
 
     # Relationship
